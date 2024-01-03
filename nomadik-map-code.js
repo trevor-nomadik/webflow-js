@@ -91,27 +91,15 @@ function initMap() {
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
-      var url = event.feature.getProperty('url'); 
 
       var population = event.feature.getProperty('population');
       // Check if population is not a number or undefined
       if (typeof population !== 'number' || isNaN(population)) {
         population = "Unknown";
       }
-
-      // Check if URL is valid
-      var isUrlValid = url && (url.startsWith('http://') || url.startsWith('https://'));
-
-      // Modify contentString based on whether the URL is valid
-      var contentString;
-      if (isUrlValid) {
-          contentString = '<div><strong><a href="' + url + '" target="_blank">' + name + '</a></strong></div>';
-      } else {
-          contentString = '<div><strong>' + name + '</strong></div>'; // Name is not clickable
-          console.log("url not clickable.")
-      }
-
-      contentString += '<div>Population Estimate: ' + population + '</div>' +
+      
+      var contentString = '<div><strong>' + name + '</strong></div>' +
+      		      '<div>Population Estimate: ' + population + '</div>' +
                       '<div>Still here?</div>' +
                       '<button id="yesBtn">Yes</button>' +
                       '<button id="noBtn">No</button>';
