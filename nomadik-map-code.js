@@ -31,7 +31,7 @@ function initMap() {
       map.data.loadGeoJson(content.body);
     })
     .catch(error => {
-      console.log(content)
+      console.error(content)
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
   });
