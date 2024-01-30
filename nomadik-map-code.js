@@ -13,9 +13,9 @@ function initMap() {
     ]
   });
 
-  map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
-  /*
-  fetch('https://engaging-surely-escargot.ngrok-free.app/api/get_polygons')
+  // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
+  
+  fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/getCampPolygons')
     .then(response => response.json())
     .then(geojsonData => {
       // Add the GeoJSON data to the map.data layer
@@ -25,7 +25,7 @@ function initMap() {
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
   });
-  */
+  
   
    // Set style based on feature properties
   map.data.setStyle(function(feature) {
@@ -58,12 +58,37 @@ function initMap() {
       coordinates.push({ lat: latlng.lat(), lng: latlng.lng() });
     });
 
+    // TAK CoT polygon
+    // Extract the first coordinate's latitude and longitude
+    var firstLon = coordinates[0]['lng'];
+    var firstLat = coordinates[0]['lat'];
+
+    // Generate UUID
+    var uuid = generateUUID();
+
+    // Time calculations
+    var now = new Date();
+    var oneMonthLater = new Date(now.getTime() + 30*24*60*60*1000);
+    var timeString = now.toISOString();
+    var staleTimeString = oneMonthLater.toISOString();
+
+    // Construct XML string with first coordinate
+    var xmlString = `<event version="2.0" type="u-d-f" uid="${uuid}" how="m-g" time="${timeString}" start="${timeString}" stale="${staleTimeString}"><point lat="${firstLat}" lon="${firstLon}" hae="0.0" le="9999999.0" ce="9999999.0" /><detail>`;
+    coordinates.forEach(function(coord) {
+      xmlString += `<link point="${coord}" />`;
+    });
+    xmlString += `<contact callsign="test_callsign" /><fillColor value="-1761607936" /><strokeColor value="-256" /><strokeWeight value="4.0" /></detail></event>`;
+
+    // Convert XML string to byte string
+    var byteString = new TextEncoder().encode(xmlString);
+    console.log(byteString)
+
     // Prepare the data to be sent
     var dataToSend = JSON.stringify({ coordinates: coordinates });
 
     // Sending the data to your endpoint
     
-    fetch('https://engaging-surely-escargot.ngrok-free.app/api/polygon', {
+    fetch('https://yourserver.com/api/polygon', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,15 +116,27 @@ function initMap() {
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
+      var url = event.feature.getProperty('url'); 
 
       var population = event.feature.getProperty('population');
       // Check if population is not a number or undefined
       if (typeof population !== 'number' || isNaN(population)) {
         population = "Unknown";
       }
-      
-      var contentString = '<div><strong>' + name + '</strong></div>' +
-      		      '<div>Population Estimate: ' + population + '</div>' +
+
+      // Check if URL is valid
+      var isUrlValid = url && (url.startsWith('http://') || url.startsWith('https://'));
+
+      // Modify contentString based on whether the URL is valid
+      var contentString;
+      if (isUrlValid) {
+          contentString = '<div><strong><a href="' + url + '" target="_blank">' + name + '</a></strong></div>';
+      } else {
+          contentString = '<div><strong>' + name + '</strong></div>'; // Name is not clickable
+          console.log("url not clickable.")
+      }
+
+      contentString += '<div>Population Estimate: ' + population + '</div>' +
                       '<div>Still here?</div>' +
                       '<button id="yesBtn">Yes</button>' +
                       '<button id="noBtn">No</button>';
@@ -169,7 +206,7 @@ function initMap() {
     console.log("Data to send:", sendData);
     /*
     // Send the data to your REST endpoint using a POST request
-    fetch('https://engaging-surely-escargot.ngrok-free.app/api/event', {
+    fetch('https://yourserver.com/api/your-endpoint', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -250,4 +287,107 @@ function initMap() {
     document.body.appendChild(modal);
   }
 
+}
+
+// CoT Functions
+function createCotPoint(latitude, longitude, altitude, circularError, heightError) {
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString('<point></point>', 'text/xml');
+  let point = xmlDoc.documentElement;
+  point.setAttribute('lat', latitude);
+  point.setAttribute('lon', longitude);
+  point.setAttribute('hae', altitude);
+  point.setAttribute('ce', circularError);
+  point.setAttribute('le', heightError);
+
+  return point;
+}
+
+function createCotColorFields(affiliation) {
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString('<colors></colors>', 'text/xml');
+  let colors = xmlDoc.documentElement;
+
+  let fillColor = xmlDoc.createElement('fillColor');
+  fillColor.setAttribute('value', affiliation);
+  colors.appendChild(fillColor);
+
+  let strokeColor = xmlDoc.createElement('strokeColor');
+  strokeColor.setAttribute('value', affiliation);
+  colors.appendChild(strokeColor);
+
+  let strokeWeight = xmlDoc.createElement('strokeWeight');
+  strokeWeight.setAttribute('value', '4.0');
+  colors.appendChild(strokeWeight);
+
+  return Array.from(colors.children);
+}
+
+function createCotAtomMessage(uid, callsign, cotType, latitude, longitude, altitude, circularError, heightError, courseOverGround, speedOverGround, startTime, staleTime) {
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
+  let root = xmlDoc.documentElement;
+  root.setAttribute('version', '2.0');
+  root.setAttribute('type', cotType);
+  root.setAttribute('uid', uid);
+  root.setAttribute('how', 'm-g');
+  root.setAttribute('time', startTime.toISOString());
+  root.setAttribute('start', startTime.toISOString());
+  root.setAttribute('stale', staleTime.toISOString());
+
+  let contact = xmlDoc.createElement('contact');
+  contact.setAttribute('callsign', callsign);
+
+  let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
+
+  let track = xmlDoc.createElement('track');
+  track.setAttribute('course', courseOverGround.toString());
+  track.setAttribute('speed', speedOverGround.toString());
+
+  let remarks = xmlDoc.createElement('remarks');
+
+  let detail = xmlDoc.createElement('detail');
+  detail.appendChild(contact);
+  detail.appendChild(track);
+  detail.appendChild(remarks);
+
+  root.appendChild(point);
+  root.appendChild(detail);
+
+  return root;
+}
+
+function createCotPolygonMessage(uid, callsign, latitude, longitude, polygon, altitude, circularError, heightError, affiliation, startTime, staleTime) {
+  let parser = new DOMParser();
+  let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
+  let root = xmlDoc.documentElement;
+  root.setAttribute('version', '2.0');
+  root.setAttribute('type', 'u-d-f');
+  root.setAttribute('uid', uid);
+  root.setAttribute('how', 'm-g');
+  root.setAttribute('time', startTime.toISOString());
+  root.setAttribute('start', startTime.toISOString());
+  root.setAttribute('stale', staleTime.toISOString());
+
+  let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
+
+  let contact = xmlDoc.createElement('contact');
+  contact.setAttribute('callsign', callsign);
+
+  let colorFields = createCotColorFields(affiliation);
+
+  let detail = xmlDoc.createElement('detail');
+
+  polygon.forEach(coords => {
+      let link = xmlDoc.createElement('link');
+      link.setAttribute('point', `${coords[1]},${coords[0]},0`);
+      detail.appendChild(link);
+  });
+
+  colorFields.forEach(field => detail.appendChild(field));
+
+  root.appendChild(point);
+  root.appendChild(detail);
+
+  return root;
 }
