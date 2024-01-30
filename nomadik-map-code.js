@@ -22,13 +22,13 @@ function initMap() {
       headers: {
         'Origin': 'https://www.nomadik.ai',
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/geo+json'
       }
     })
     .then(response => response.json())
     .then(content => {
       // Add the GeoJSON data to the map.data layer
-      map.data.loadGeoJson(content);
+      map.data.addGeoJson(content);
     })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
