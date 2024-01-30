@@ -28,10 +28,9 @@ function initMap() {
     .then(response => response.json())
     .then(content => {
       // Add the GeoJSON data to the map.data layer
-      map.data.loadGeoJson(content.body);
+      map.data.loadGeoJson(content);
     })
     .catch(error => {
-      console.error(content)
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
   });
