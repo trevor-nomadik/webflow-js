@@ -15,7 +15,7 @@ function initMap() {
 
   // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
   
-  fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/getCampPolygons')
+  fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons')
     .then(response => response.json())
     .then(geojsonData => {
       // Add the GeoJSON data to the map.data layer
