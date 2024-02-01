@@ -1,45 +1,20 @@
 function initMap() {
-  // Assuming 'map' is the ID of an existing div intended for the map
-  var mapDiv = document.getElementById('map');
-  mapDiv.style.position = 'absolute';
-  mapDiv.style.left = '250px'; // Offset for sidebar width
-  mapDiv.style.height = '500px';
-  mapDiv.style.width = 'calc(100% - 250px)'; // Adjust for sidebar
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: {lat: 30.266666, lng: -97.733330} ,
+    mapTypeId: 'satellite',
+    mapTypeControl: false,
+    streetViewControl: false,
+    styles: [
+        {
+            featureType: 'poi',   // Hide all points of interest
+            stylers: [{ visibility: 'off' }]
+        }
+    ]
+  });
 
-  // Create and style the sidebar
-  var sidebar = document.createElement('div');
-  sidebar.id = 'sidebar';
-  sidebar.style.position = 'absolute';
-  sidebar.style.left = '0';
-  sidebar.style.width = '250px';
-  sidebar.style.height = '500px';
-  sidebar.style.overflowY = 'auto';
+  // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
   
-  // Add the sidebar to the map's parent element
-  mapDiv.parentNode.insertBefore(sidebar, mapDiv);
-
-  // Wait until the sidebar is in place and styles are applied
-  setTimeout(function() {
-      var map = new google.maps.Map(mapDiv, {
-          zoom: 12,
-          center: {lat: 30.266666, lng: -97.733330},
-          mapTypeId: 'satellite',
-          mapTypeControl: false,
-          streetViewControl: false,
-          styles: [{
-              featureType: 'poi', // Hide all points of interest
-              stylers: [{ visibility: 'off' }]
-          }]
-      });
-  }, 0); // Small delay to ensure DOM adjustments are rendered
-
-  // Adjust the map div style
-  var mapDiv = document.getElementById('map');
-  mapDiv.style.flexGrow = '1';
-
-  var polygonList = document.createElement('ul');
-  sidebar.appendChild(polygonList); // Append an unordered list to the sidebar for listing polygons
-
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
     {
@@ -54,17 +29,7 @@ function initMap() {
     .then(content => {
       // Add the GeoJSON data to the map.data layer
       map.data.addGeoJson(content);
-  
-      // Populate sidebar with polygon names
-      content.features.forEach((feature, index) => {
-          const listItem = document.createElement('li');
-          listItem.textContent = feature.properties.name; // Assuming each feature has a 'name' property
-          listItem.style.cursor = 'pointer'; // Make it look clickable
-          listItem.addEventListener('click', function() { zoomToFeature(feature); });
-          document.getElementById('sidebar').appendChild(listItem);
-          polygonList.appendChild(listItem);
-      });
-  })
+    })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
@@ -90,8 +55,8 @@ function initMap() {
       editable: true, // Set to false if you don't want the polygon to be editable
       draggable: true // Set to false if you don't want the polygon to be draggable
     }
-    });
-    drawingManager.setMap(map);
+	});
+	drawingManager.setMap(map);
   
   google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
   google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
@@ -148,7 +113,7 @@ function initMap() {
         console.error('Error:', error);
         // Handle errors
       });
-    });
+	});
   
   
   // Create an info window to display the polygon's name
@@ -157,7 +122,7 @@ function initMap() {
 
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
-          infoWindowOpened = true;
+  		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
       var url = event.feature.getProperty('url'); 
@@ -236,15 +201,6 @@ function initMap() {
     }
   });
 
-  // Zoom to Feature function
-  function zoomToFeature(feature, map) {
-      var bounds = new google.maps.LatLngBounds();
-      feature.geometry.coordinates[0].forEach(coord => {
-          bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
-      });
-      map.fitBounds(bounds); // Zooms the map to the bounds
-  }
-
   // Example function to send data to a server
   function sendDataToServer(data, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
@@ -257,6 +213,25 @@ function initMap() {
     // Use AJAX, Fetch API, or other methods to send sendData to a server
     // For demonstration purposes, we'll just log the data
     console.log("Data to send:", sendData);
+    /*
+    // Send the data to your REST endpoint using a POST request
+    fetch('https://yourserver.com/api/your-endpoint', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(responseData => {
+      console.log('Server response:', responseData);
+      // Handle the server response as needed
+    })
+    .catch(error => {
+      console.error('Error sending data to server:', error);
+      // Handle errors
+    });
+  */
   }
 
   function generateUUID() {
