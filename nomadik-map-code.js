@@ -1,19 +1,12 @@
 function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: {lat: 30.266666, lng: -97.733330} ,
-    mapTypeId: 'satellite',
-    mapTypeControl: false,
-    streetViewControl: false,
-    styles: [
-        {
-            featureType: 'poi',   // Hide all points of interest
-            stylers: [{ visibility: 'off' }]
-        }
-    ]
-  });
+  // Create a new container div for the map and sidebar
+  var container = document.createElement('div');
+  container.style.display = 'flex';
+  container.style.width = '100%'; // Adjust the width as needed
 
-  // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
+  // Reference the existing map div
+  var mapDiv = document.getElementById('map');
+  mapDiv.style.flexGrow = '1'; // Allow the map to fill the available space
 
   // Create sidebar dynamically
   var sidebar = document.createElement('div');
@@ -25,12 +18,26 @@ function initMap() {
   sidebar.style.padding = '10px';
   sidebar.style.boxSizing = 'border-box';
 
-  // Adjust the map container style to accommodate the sidebar
-  mapContainer.style.display = 'flex';
-  mapContainer.style.flexWrap = 'wrap';
 
-  // Append the sidebar to the map container
-  mapContainer.insertBefore(sidebar, mapContainer.firstChild); // Insert sidebar before the map
+  // Insert the new container into the DOM, replacing the map div temporarily
+  mapDiv.parentNode.insertBefore(container, mapDiv);
+  
+  // Move the map div and insert the sidebar into the new container
+  container.appendChild(mapDiv); // Add the map to the container
+  container.appendChild(sidebar); // Add the sidebar to the container
+
+  // Initialize the map in the mapDiv as before
+  var map = new google.maps.Map(mapDiv, {
+      zoom: 12,
+      center: {lat: 30.266666, lng: -97.733330},
+      mapTypeId: 'satellite',
+      mapTypeControl: false,
+      streetViewControl: false,
+      styles: [{
+          featureType: 'poi', // Hide all points of interest
+          stylers: [{ visibility: 'off' }]
+      }]
+  });
 
   // Adjust the map div style
   var mapDiv = document.getElementById('map');
