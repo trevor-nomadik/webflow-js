@@ -15,18 +15,30 @@ function initMap() {
 
   // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
 
-  // Create a sidebar for listing polygons
+  // Create sidebar dynamically
   var sidebar = document.createElement('div');
   sidebar.id = 'sidebar';
-  sidebar.style.width = '25%';
-  sidebar.style.height = '100%';
-  sidebar.style.float = 'right';
-  sidebar.style.overflow = 'auto';
-  document.body.appendChild(sidebar); // Append sidebar to the body
-  var polygonList = document.createElement('ul');
-  sidebar.appendChild(polygonList); // Append an unordered list to the sidebar
+  sidebar.style.maxWidth = '250px'; // Set the sidebar width
+  sidebar.style.height = '100%'; // Set the sidebar height to match the map container
+  sidebar.style.overflowY = 'auto'; // Enable scroll for the sidebar
+  sidebar.style.float = 'left'; // Position sidebar to the left of the map
+  sidebar.style.padding = '10px';
+  sidebar.style.boxSizing = 'border-box';
 
-  
+  // Adjust the map container style to accommodate the sidebar
+  mapContainer.style.display = 'flex';
+  mapContainer.style.flexWrap = 'wrap';
+
+  // Append the sidebar to the map container
+  mapContainer.insertBefore(sidebar, mapContainer.firstChild); // Insert sidebar before the map
+
+  // Adjust the map div style
+  var mapDiv = document.getElementById('map');
+  mapDiv.style.flexGrow = '1';
+
+  var polygonList = document.createElement('ul');
+  sidebar.appendChild(polygonList); // Append an unordered list to the sidebar for listing polygons
+
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
     {
