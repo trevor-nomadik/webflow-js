@@ -14,6 +14,18 @@ function initMap() {
   });
 
   // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
+
+  // Create a sidebar for listing polygons
+  var sidebar = document.createElement('div');
+  sidebar.id = 'sidebar';
+  sidebar.style.width = '25%';
+  sidebar.style.height = '100%';
+  sidebar.style.float = 'right';
+  sidebar.style.overflow = 'auto';
+  document.body.appendChild(sidebar); // Append sidebar to the body
+  var polygonList = document.createElement('ul');
+  sidebar.appendChild(polygonList); // Append an unordered list to the sidebar
+
   
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
@@ -29,7 +41,15 @@ function initMap() {
     .then(content => {
       // Add the GeoJSON data to the map.data layer
       map.data.addGeoJson(content);
-    })
+  
+      // Populate sidebar with polygon names
+      content.features.forEach((feature, index) => {
+          const listItem = document.createElement('li');
+          listItem.textContent = feature.properties.name; // Assuming each feature has a 'name' property
+          listItem.onclick = function() { zoomToFeature(feature); };
+          polygonList.appendChild(listItem);
+      });
+  })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
@@ -55,8 +75,8 @@ function initMap() {
       editable: true, // Set to false if you don't want the polygon to be editable
       draggable: true // Set to false if you don't want the polygon to be draggable
     }
-	});
-	drawingManager.setMap(map);
+    });
+    drawingManager.setMap(map);
   
   google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
   google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
@@ -113,7 +133,7 @@ function initMap() {
         console.error('Error:', error);
         // Handle errors
       });
-	});
+    });
   
   
   // Create an info window to display the polygon's name
@@ -122,7 +142,7 @@ function initMap() {
 
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
-  		infoWindowOpened = true;
+          infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
       var url = event.feature.getProperty('url'); 
@@ -201,6 +221,15 @@ function initMap() {
     }
   });
 
+  // Zoom to Feature function
+  function zoomToFeature(feature, map) {
+      const bounds = new google.maps.LatLngBounds();
+      feature.geometry.coordinates[0].forEach(coord => {
+          bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+      });
+      map.fitBounds(bounds); // Zooms the map to the bounds
+  }
+
   // Example function to send data to a server
   function sendDataToServer(data, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
@@ -213,25 +242,6 @@ function initMap() {
     // Use AJAX, Fetch API, or other methods to send sendData to a server
     // For demonstration purposes, we'll just log the data
     console.log("Data to send:", sendData);
-    /*
-    // Send the data to your REST endpoint using a POST request
-    fetch('https://yourserver.com/api/your-endpoint', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(responseData => {
-      console.log('Server response:', responseData);
-      // Handle the server response as needed
-    })
-    .catch(error => {
-      console.error('Error sending data to server:', error);
-      // Handle errors
-    });
-  */
   }
 
   function generateUUID() {
