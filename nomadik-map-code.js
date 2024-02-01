@@ -9,7 +9,7 @@ function initMap() {
   var mapDiv = document.getElementById('map');
   // Ensure the map div fills the container but adheres to the height limit
   mapDiv.style.flex = '1'; // Flex grow to fill available space
-  mapDiv.style.minWidth = '0'; // Prevent flex items from overflowing their container
+  mapDiv.style.height = '500px'; // Explicitly set the map height
 
   // Create the sidebar with explicit height and scrolling
   var sidebar = document.createElement('div');
