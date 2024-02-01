@@ -33,6 +33,7 @@ function initMap() {
       // Populate sidebar with polygon names
       content.features.forEach((feature) => {
           const listItem = document.createElement('li');
+          listItem.style.cursor = 'pointer'; 
           listItem.textContent = feature.properties.name; // Assuming 'name' exists
           listItem.onclick = function() { zoomToFeature(feature, map); };
           polygonList.appendChild(listItem);
