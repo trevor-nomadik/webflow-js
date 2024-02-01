@@ -1,27 +1,23 @@
-function initMap() {
-  // Create a new container div for the map and sidebar
+function initMap() {// Create a new container div for the map and sidebar
   var container = document.createElement('div');
   container.style.display = 'flex';
-  container.style.width = '100%'; // Adjust the width as needed
+  container.style.height = '100vh'; // Ensure the container fills the viewport height
 
-  // Reference the existing map div
+  // Reference the existing map div and adjust styles if necessary
   var mapDiv = document.getElementById('map');
+  mapDiv.style.height = '100vh'; // Match the map height to the viewport or adjust as needed
   mapDiv.style.flexGrow = '1'; // Allow the map to fill the available space
 
-  // Create sidebar dynamically
+  // Create the sidebar
   var sidebar = document.createElement('div');
   sidebar.id = 'sidebar';
-  sidebar.style.maxWidth = '250px'; // Set the sidebar width
-  sidebar.style.height = '100%'; // Set the sidebar height to match the map container
-  sidebar.style.overflowY = 'auto'; // Enable scroll for the sidebar
-  sidebar.style.float = 'left'; // Position sidebar to the left of the map
-  sidebar.style.padding = '10px';
-  sidebar.style.boxSizing = 'border-box';
-
+  sidebar.style.width = '250px'; // Set the sidebar width
+  sidebar.style.overflowY = 'auto'; // Enable vertical scrolling for the sidebar
+  sidebar.style.height = '100vh'; // Match the sidebar height to the viewport or to the map height
 
   // Insert the new container into the DOM, replacing the map div temporarily
   mapDiv.parentNode.insertBefore(container, mapDiv);
-  
+
   // Move the map div and insert the sidebar into the new container
   container.appendChild(mapDiv); // Add the map to the container
   container.appendChild(sidebar); // Add the sidebar to the container
@@ -65,7 +61,9 @@ function initMap() {
       content.features.forEach((feature, index) => {
           const listItem = document.createElement('li');
           listItem.textContent = feature.properties.name; // Assuming each feature has a 'name' property
-          listItem.onclick = function() { zoomToFeature(feature); };
+          listItem.style.cursor = 'pointer'; // Make it look clickable
+          listItem.addEventListener('click', function() { zoomToFeature(feature); });
+          document.getElementById('sidebar').appendChild(listItem);
           polygonList.appendChild(listItem);
       });
   })
