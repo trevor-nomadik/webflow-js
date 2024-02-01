@@ -12,6 +12,8 @@ function initMap() {
         }
     ]
   });
+
+  var polygonList = document.getElementById('sidebar'); 
   
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
@@ -27,7 +29,15 @@ function initMap() {
     .then(content => {
       // Add the GeoJSON data to the map.data layer
       map.data.addGeoJson(content);
-    })
+
+      // Populate sidebar with polygon names
+      content.features.forEach((feature) => {
+          const listItem = document.createElement('li');
+          listItem.textContent = feature.properties.name; // Assuming 'name' exists
+          listItem.onclick = function() { zoomToFeature(feature, map); };
+          polygonList.appendChild(listItem);
+      });
+  })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
@@ -225,6 +235,23 @@ function initMap() {
     document.body.appendChild(modal);
   }
 
+  function zoomToFeature(feature, map) {
+      const bounds = new google.maps.LatLngBounds();
+      const geometry = feature.geometry;
+      if (geometry.type === 'Polygon') {
+          geometry.coordinates[0].forEach(coord => {
+              bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+          });
+      } else if (geometry.type === 'MultiPolygon') {
+          // For MultiPolygon, iterate through each polygon
+          geometry.coordinates.forEach(polygon => {
+              polygon[0].forEach(coord => {
+                  bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+              });
+          });
+      }
+      map.fitBounds(bounds); // Zooms the map to the bounds
+  }
 }
 
 // CoT Functions
