@@ -1,11 +1,11 @@
 function initMap() {// Create a new container div for the map and sidebar
   var container = document.createElement('div');
   container.style.display = 'flex';
-  container.style.height = '100vh'; // Ensure the container fills the viewport height
+  container.style.height = '500px'; // Ensure the container fills the viewport height
 
   // Reference the existing map div and adjust styles if necessary
   var mapDiv = document.getElementById('map');
-  mapDiv.style.height = '100vh'; // Match the map height to the viewport or adjust as needed
+  mapDiv.style.height = '500px'; // Match the map height to the viewport or adjust as needed
   mapDiv.style.flexGrow = '1'; // Allow the map to fill the available space
 
   // Create the sidebar
@@ -13,7 +13,7 @@ function initMap() {// Create a new container div for the map and sidebar
   sidebar.id = 'sidebar';
   sidebar.style.width = '250px'; // Set the sidebar width
   sidebar.style.overflowY = 'auto'; // Enable vertical scrolling for the sidebar
-  sidebar.style.height = '100vh'; // Match the sidebar height to the viewport or to the map height
+  sidebar.style.height = '500px'; // Match the sidebar height to the viewport or to the map height
 
   // Insert the new container into the DOM, replacing the map div temporarily
   mapDiv.parentNode.insertBefore(container, mapDiv);
@@ -240,7 +240,7 @@ function initMap() {// Create a new container div for the map and sidebar
 
   // Zoom to Feature function
   function zoomToFeature(feature, map) {
-      const bounds = new google.maps.LatLngBounds();
+      var bounds = new google.maps.LatLngBounds();
       feature.geometry.coordinates[0].forEach(coord => {
           bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
       });
