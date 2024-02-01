@@ -12,8 +12,6 @@ function initMap() {
         }
     ]
   });
-
-  // map.data.loadGeoJson('https://raw.githubusercontent.com/trevor-nomadik/camps-kml/main/austin-camps.geojson');
   
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
@@ -44,77 +42,50 @@ function initMap() {
     };
   });
   
-    var drawingManager = new google.maps.drawing.DrawingManager({
-    drawingMode: google.maps.drawing.OverlayType.POLYGON,
-    drawingControl: true,
-    drawingControlOptions: {
-      position: google.maps.ControlPosition.TOP_CENTER,
-      drawingModes: ['polygon']
-    },
-    polygonOptions: {
-      editable: true, // Set to false if you don't want the polygon to be editable
-      draggable: true // Set to false if you don't want the polygon to be draggable
-    }
-	});
-	drawingManager.setMap(map);
-  
   google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
-  google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
-    // Extracting the coordinates of the polygon
-    var path = polygon.getPath();
-    var coordinates = [];
-    path.forEach(function(latlng) {
-      coordinates.push({ lat: latlng.lat(), lng: latlng.lng() });
-    });
-
-    // TAK CoT polygon
-    // Extract the first coordinate's latitude and longitude
-    var firstLon = coordinates[0]['lng'];
-    var firstLat = coordinates[0]['lat'];
-
-    // Generate UUID
-    var uuid = generateUUID();
-
-    // Time calculations
-    var now = new Date();
-    var oneMonthLater = new Date(now.getTime() + 30*24*60*60*1000);
-    var timeString = now.toISOString();
-    var staleTimeString = oneMonthLater.toISOString();
-
-    // Construct XML string with first coordinate
-    var xmlString = `<event version="2.0" type="u-d-f" uid="${uuid}" how="m-g" time="${timeString}" start="${timeString}" stale="${staleTimeString}"><point lat="${firstLat}" lon="${firstLon}" hae="0.0" le="9999999.0" ce="9999999.0" /><detail>`;
-    coordinates.forEach(function(coord) {
-      xmlString += `<link point="${coord}" />`;
-    });
-    xmlString += `<contact callsign="test_callsign" /><fillColor value="-1761607936" /><strokeColor value="-256" /><strokeWeight value="4.0" /></detail></event>`;
-
-    // Convert XML string to byte string
-    var byteString = new TextEncoder().encode(xmlString);
-    console.log(byteString)
-
-    // Prepare the data to be sent
-    var dataToSend = JSON.stringify({ coordinates: coordinates });
-
-    // Sending the data to your endpoint
-    
-    fetch('https://yourserver.com/api/polygon', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: dataToSend
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        showThankYouModal(); // Show the thank you modal
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        // Handle errors
+  google.maps.event.addListenerOnce(map, 'idle', function() {
+    // Listen for clicks on the map
+    google.maps.event.addListener(map, 'dblclick', function(event) {
+      // Place a marker at the click location
+      var marker = new google.maps.Marker({
+        position: event.latLng,
+        map: map
       });
-	});
   
+      // Prompt the user for input
+      var userInput = prompt("What's going on here...?");
+  
+      if (userInput !== null && userInput.trim() !== "") {
+        // Prepare the data to be sent
+        var dataToSend = JSON.stringify({
+          location: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+          description: userInput
+        });
+  
+        // Sending the data to your endpoint
+        fetch('https://yourserver.com/api/point', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: dataToSend
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+          showThankYouModal(); // Show the thank you modal
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          // Handle errors, by removing the marker
+          map.removeOverlay(marker);
+        });
+      } else {
+        // Remove the marker if no input was provided
+        marker.setMap(null);
+      }
+    });
+  });
   
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
