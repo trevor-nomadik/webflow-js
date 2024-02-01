@@ -1,28 +1,32 @@
-function initMap() {// Create a new container div for the map and sidebar
+function initMap() {
+  // Create a new container div for the map and sidebar
   var container = document.createElement('div');
   container.style.display = 'flex';
-  container.style.height = '500px'; // Ensure the container fills the viewport height
+  container.style.alignItems = 'flex-start'; // Prevent flex items from stretching beyond max height
+  container.style.height = '500px'; // Set the fixed height for the container
 
-  // Reference the existing map div and adjust styles if necessary
+  // Reference the existing map div, adjust styles if necessary
   var mapDiv = document.getElementById('map');
-  mapDiv.style.height = '500px'; // Match the map height to the viewport or adjust as needed
-  mapDiv.style.flexGrow = '1'; // Allow the map to fill the available space
+  // Ensure the map div fills the container but adheres to the height limit
+  mapDiv.style.flex = '1'; // Flex grow to fill available space
+  mapDiv.style.height = '500px'; // Explicitly set the map height
 
-  // Create the sidebar
+  // Create the sidebar with explicit height and scrolling
   var sidebar = document.createElement('div');
   sidebar.id = 'sidebar';
   sidebar.style.width = '250px'; // Set the sidebar width
   sidebar.style.overflowY = 'auto'; // Enable vertical scrolling for the sidebar
-  sidebar.style.height = '500px'; // Match the sidebar height to the viewport or to the map height
+  sidebar.style.height = '500px'; // Explicitly match the sidebar height to the map
 
-  // Insert the new container into the DOM, replacing the map div temporarily
+  // Insert the new container into the DOM before adjusting its children
   mapDiv.parentNode.insertBefore(container, mapDiv);
+  mapDiv.parentNode.removeChild(mapDiv);
 
-  // Move the map div and insert the sidebar into the new container
-  container.appendChild(mapDiv); // Add the map to the container
-  container.appendChild(sidebar); // Add the sidebar to the container
+  // Append both the map and the sidebar to the new container
+  container.appendChild(sidebar); // Add the sidebar first
+  container.appendChild(mapDiv); // Then add the map
 
-  // Initialize the map in the mapDiv as before
+  // Now, initialize the map in the mapDiv as before
   var map = new google.maps.Map(mapDiv, {
       zoom: 12,
       center: {lat: 30.266666, lng: -97.733330},
