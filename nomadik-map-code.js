@@ -1,41 +1,37 @@
 function initMap() {
+  // Assuming 'map' is the ID of an existing div intended for the map
   var mapDiv = document.getElementById('map');
-  var originalParent = mapDiv.parentNode; // Store the original parent to re-append later
+  mapDiv.style.position = 'absolute';
+  mapDiv.style.left = '250px'; // Offset for sidebar width
+  mapDiv.style.height = '500px';
+  mapDiv.style.width = 'calc(100% - 250px)'; // Adjust for sidebar
 
-  var container = document.createElement('div');
-  container.style.display = 'flex';
-  container.style.alignItems = 'flex-start';
-  container.style.height = '500px'; // Fixed height for the container
-
+  // Create and style the sidebar
   var sidebar = document.createElement('div');
   sidebar.id = 'sidebar';
+  sidebar.style.position = 'absolute';
+  sidebar.style.left = '0';
   sidebar.style.width = '250px';
+  sidebar.style.height = '500px';
   sidebar.style.overflowY = 'auto';
-  sidebar.style.height = '500px'; // Match sidebar height to map
+  
+  // Add the sidebar to the map's parent element
+  mapDiv.parentNode.insertBefore(sidebar, mapDiv);
 
-  // Reorganize the DOM
-  originalParent.insertBefore(container, mapDiv); // Insert the container at the map div's location
-  originalParent.removeChild(mapDiv); // Remove the map div from its original parent
-
-  container.appendChild(sidebar); // Add the sidebar to the container
-  container.appendChild(mapDiv); // Re-add the map div to the container
-  mapDiv.style.flex = '1'; // Allow the map to fill the available space
-
-  // Make sure the mapDiv has a specific width if flex doesn't automatically apply
-  mapDiv.style.width = '100%'; // Ensure the map div fills the remaining space
-
-  // Initialize the map after the container and mapDiv adjustments
-  var map = new google.maps.Map(mapDiv, {
-      zoom: 12,
-      center: {lat: 30.266666, lng: -97.733330},
-      mapTypeId: 'satellite',
-      mapTypeControl: false,
-      streetViewControl: false,
-      styles: [{
-          featureType: 'poi',
-          stylers: [{ visibility: 'off' }]
-      }]
-  });
+  // Wait until the sidebar is in place and styles are applied
+  setTimeout(function() {
+      var map = new google.maps.Map(mapDiv, {
+          zoom: 12,
+          center: {lat: 30.266666, lng: -97.733330},
+          mapTypeId: 'satellite',
+          mapTypeControl: false,
+          streetViewControl: false,
+          styles: [{
+              featureType: 'poi', // Hide all points of interest
+              stylers: [{ visibility: 'off' }]
+          }]
+      });
+  }, 0); // Small delay to ensure DOM adjustments are rendered
 
   // Adjust the map div style
   var mapDiv = document.getElementById('map');
