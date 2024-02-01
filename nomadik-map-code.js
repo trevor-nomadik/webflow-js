@@ -43,49 +43,6 @@ function initMap() {
   });
   
   google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
-  google.maps.event.addListenerOnce(map, 'idle', function() {
-    // Listen for clicks on the map
-    google.maps.event.addListener(map, 'dblclick', function(event) {
-      // Place a marker at the click location
-      var marker = new google.maps.Marker({
-        position: event.latLng,
-        map: map
-      });
-  
-      // Prompt the user for input
-      var userInput = prompt("What's going on here...?");
-  
-      if (userInput !== null && userInput.trim() !== "") {
-        // Prepare the data to be sent
-        var dataToSend = JSON.stringify({
-          location: { lat: event.latLng.lat(), lng: event.latLng.lng() },
-          description: userInput
-        });
-  
-        // Sending the data to your endpoint
-        fetch('https://yourserver.com/api/point', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: dataToSend
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-          showThankYouModal(); // Show the thank you modal
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          // Handle errors, by removing the marker
-          map.removeOverlay(marker);
-        });
-      } else {
-        // Remove the marker if no input was provided
-        marker.setMap(null);
-      }
-    });
-  });
   
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
@@ -175,34 +132,35 @@ function initMap() {
   // Example function to send data to a server
   function sendDataToServer(data, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
-    var sendData = {
-      userInput: data,
-      latitude: lat,
-      longitude: lng
-    };
+    if (userInput !== null && userInput.trim() !== "") {
+      // Prepare the data to be sent
+      var dataToSend = JSON.stringify({
+        location: { lat: lat, lng: lng },
+        description: userInput
+      });
 
-    // Use AJAX, Fetch API, or other methods to send sendData to a server
-    // For demonstration purposes, we'll just log the data
-    console.log("Data to send:", sendData);
-    /*
-    // Send the data to your REST endpoint using a POST request
-    fetch('https://yourserver.com/api/your-endpoint', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(responseData => {
-      console.log('Server response:', responseData);
-      // Handle the server response as needed
-    })
-    .catch(error => {
-      console.error('Error sending data to server:', error);
-      // Handle errors
-    });
-  */
+      // Sending the data to your endpoint
+      fetch('https://yourserver.com/api/point', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: dataToSend
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        showThankYouModal(); // Show the thank you modal
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        // Handle errors, by removing the marker
+        map.removeOverlay(marker);
+      });
+    } else {
+      // Remove the marker if no input was provided
+      marker.setMap(null);
+    }
   }
 
   function generateUUID() {
