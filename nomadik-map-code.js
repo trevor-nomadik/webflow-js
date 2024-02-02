@@ -13,6 +13,39 @@ function initMap() {
     ]
   });
 
+  // Create a button and set its properties
+  var pointSelectionButton = document.createElement('button');
+  pointSelectionButton.textContent = 'Select Point'; // Text on the button
+  pointSelectionButton.className = 'custom-map-control-button'; // Add a class for styling
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(pointSelectionButton);
+
+  let isPointSelectionModeEnabled = false;
+
+  // Listen for button clicks to toggle point selection mode
+  pointSelectionButton.addEventListener('click', () => {
+    isPointSelectionModeEnabled = !isPointSelectionModeEnabled;
+  });
+
+  // Modify your map click event listener
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (isPointSelectionModeEnabled) {
+      // Capture the clicked location
+      var clickedLat = event.latLng.lat();
+      var clickedLng = event.latLng.lng();
+
+      // Prompt the user for input
+      var userInput = prompt("Please enter some text for this location:", "");
+
+      // If user input is provided, send data to the server
+      if (userInput !== null && userInput !== "") {
+        sendDataToServer(userInput, clickedLat, clickedLng);
+      }
+
+      // Reset point selection mode
+      isPointSelectionModeEnabled = false;
+    }
+  });
+
   var polygonList = document.getElementById('sidebar'); 
 
   // Create and append the search bar to the sidebar
