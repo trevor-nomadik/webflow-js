@@ -15,9 +15,19 @@ function initMap() {
 
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
-  pointSelectionButton.textContent = 'Select Point'; // Text on the button
-  pointSelectionButton.className = 'custom-map-control-button'; // Add a class for styling
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(pointSelectionButton);
+  pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png'; 
+  pointSelectionButton.style.backgroundSize = 'contain';
+  pointSelectionButton.style.backgroundRepeat = 'no-repeat';
+  pointSelectionButton.style.backgroundPosition = 'center';
+  pointSelectionButton.style.width = '50px'; 
+  pointSelectionButton.style.height = '50px'; 
+  pointSelectionButton.style.border = 'none';
+  pointSelectionButton.style.cursor = 'pointer';
+  pointSelectionButton.style.padding = '0';
+  pointSelectionButton.style.backgroundColor = 'white'; 
+  // Add the button to the map
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(pointSelectionButton);
 
   let isPointSelectionModeEnabled = false;
 
