@@ -157,6 +157,39 @@ function initMap() {
 
   // Add a right-click event listener to the map
   google.maps.event.addListener(map, 'rightclick', function(event) {
+    handleMapClick(event);
+  });
+
+  // Variables to track touch start and end times
+  var touchStartTime = 0;
+  var touchEndTime = 0;
+
+  // Add touchstart event listener to the map
+  google.maps.event.addListener(map, 'touchstart', function(event) {
+    // Record the time when the touch started
+    touchStartTime = new Date().getTime();
+  }, {passive: true}); // Add passive: true to not block scrolling
+
+  // Add touchend event listener to the map
+  google.maps.event.addListener(map, 'touchend', function(event) {
+    // Record the time when the touch ended
+    touchEndTime = new Date().getTime();
+    // Check if the touch duration exceeds the threshold for a long press (e.g., 500 ms)
+    if (touchEndTime - touchStartTime > 500) {
+      // Prevent the default click behavior
+      event.preventDefault();
+      // Convert the touch point to a LatLng object
+      var touchPoint = event.latLng; 
+      if (!touchPoint) {
+        // Fallback 
+      }
+      // Call the function to handle the map click or long press
+      handleMapClick({latLng: touchPoint});
+    }
+  });
+
+  // Function to handle map clicks or long presses
+  function handleMapClick(event) {
     // Capture the clicked location's latitude and longitude
     var clickedLat = event.latLng.lat();
     var clickedLng = event.latLng.lng();
@@ -166,10 +199,9 @@ function initMap() {
 
     // Check if the user provided input
     if (userInput !== null && userInput !== "") {
-      // Send data to the server, including clickedLat and clickedLng
       sendDataToServer(userInput, clickedLat, clickedLng);
     }
-  });
+  }
 
   // Example function to send data to a server
   function sendDataToServer(data, lat, lng) {
