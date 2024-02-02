@@ -14,7 +14,17 @@ function initMap() {
   });
 
   var polygonList = document.getElementById('sidebar'); 
-  
+
+  // Create and append the search bar to the sidebar
+  const searchInput = document.createElement('input');
+  searchInput.setAttribute('type', 'text');
+  searchInput.setAttribute('placeholder', 'Search polygons...');
+  searchInput.style.width = '100%';
+  searchInput.style.padding = '10px';
+  searchInput.style.marginBottom = '10px';
+  searchInput.style.boxSizing = 'border-box';
+  polygonList.insertBefore(searchInput, polygonList.firstChild);
+
   fetch(
     'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
     {
@@ -29,14 +39,35 @@ function initMap() {
     .then(content => {
       // Add the GeoJSON data to the map.data layer
       map.data.addGeoJson(content);
-
-      // Populate sidebar with polygon names
-      content.features.forEach((feature) => {
+  
+      // Empty the polygonList before adding search results
+      function clearPolygonList() {
+        while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
+          polygonList.removeChild(polygonList.lastChild);
+        }
+      }
+  
+      // Function to populate sidebar with polygon names
+      function populatePolygonList(features) {
+        clearPolygonList(); // Clear existing list items before repopulating
+        features.forEach(feature => {
           const listItem = document.createElement('li');
-          listItem.style.cursor = 'pointer'; 
-          listItem.textContent = feature.properties.name; // Assuming 'name' exists
+          listItem.textContent = feature.properties.name;
+          listItem.style.cursor = 'pointer';
           listItem.onclick = function() { zoomToFeature(feature, map); };
           polygonList.appendChild(listItem);
+        });
+      }
+  
+      populatePolygonList(content.features); // Initial population of the list
+  
+      // Implement search functionality
+      searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredFeatures = content.features.filter(feature => 
+          feature.properties.name.toLowerCase().includes(searchTerm)
+        );
+        populatePolygonList(filteredFeatures);
       });
   })
     .catch(error => {
