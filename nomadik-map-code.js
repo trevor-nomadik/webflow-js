@@ -25,7 +25,8 @@ function initMap() {
   pointSelectionButton.style.border = 'none';
   pointSelectionButton.style.cursor = 'pointer';
   pointSelectionButton.style.padding = '0';
-  pointSelectionButton.style.backgroundColor = 'white'; 
+  pointSelectionButton.style.margin = '10px';
+  pointSelectionButton.style.backgroundColor = 'transparent'; 
   // Add the button to the map
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(pointSelectionButton);
 
