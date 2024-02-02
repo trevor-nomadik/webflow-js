@@ -34,15 +34,15 @@ function initMap() {
       var clickedLng = event.latLng.lng();
 
       // Prompt the user for input
-      var userInput = prompt("Please enter some text for this location:", "");
+      var userInput = prompt("What's going on here?", "");
+
+      // Reset point selection mode
+      isPointSelectionModeEnabled = false;
 
       // If user input is provided, send data to the server
       if (userInput !== null && userInput !== "") {
         sendDataToServer(userInput, clickedLat, clickedLng);
       }
-
-      // Reset point selection mode
-      isPointSelectionModeEnabled = false;
     }
   });
 
@@ -205,7 +205,7 @@ function initMap() {
   });
 
   // Example function to send data to a server
-  function sendDataToServer(data, lat, lng) {
+  function sendDataToServer(userInput, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
     if (userInput !== null && userInput.trim() !== "") {
       // Prepare the data to be sent
