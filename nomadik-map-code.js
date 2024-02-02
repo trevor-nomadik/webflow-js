@@ -155,46 +155,8 @@ function initMap() {
       }
   });
 
-  // Variables to track touch start and whether it should trigger a long press
-  var touchStartTime = 0;
-  var longPressTriggered = false;
-
-  // Function to calculate and handle the long press on the map
-  function setupMapLongPressHandler(map) {
-    google.maps.event.addListener(map, 'mousedown', function(event) {
-      // For desktop browsers, handle right-click
-      if (event.button === 2) { // Right mouse button was pressed
-        handleMapClick(event.latLng);
-      }
-    });
-
-    map.addListener('touchstart', function(e) {
-      touchStartTime = new Date().getTime();
-      longPressTriggered = false; // Reset this flag at the start of a touch
-      e.preventDefault(); // Consider preventing default to avoid map dragging and zooming
-    }, {passive: false});
-
-    map.addListener('touchend', function(e) {
-      var touchEndTime = new Date().getTime();
-      if (touchEndTime - touchStartTime > 500 && !longPressTriggered) { // 500 ms for long press
-        longPressTriggered = true; // Set the flag so it doesn't trigger multiple times
-        var touchPoint = e.va.changedTouches[0]; // Get the touch point
-        var point = new google.maps.Point(touchPoint.clientX, touchPoint.clientY);
-        // Convert the touch point to latLng coordinates
-        var latLng = map.getProjection().fromPointToLatLng(point);
-        handleMapClick(latLng);
-      }
-    });
-
-    map.addListener('touchmove', function() {
-      touchStartTime = 0; // Reset start time on move to cancel long press detection
-    });
-  }
-
-  setupMapLongPressHandler(map);
-
-  // Function to handle map clicks or long presses
-  function handleMapClick(event) {
+  // Add a right-click event listener to the map
+  google.maps.event.addListener(map, 'rightclick', function(event) {
     // Capture the clicked location's latitude and longitude
     var clickedLat = event.latLng.lat();
     var clickedLng = event.latLng.lng();
@@ -204,9 +166,10 @@ function initMap() {
 
     // Check if the user provided input
     if (userInput !== null && userInput !== "") {
+      // Send data to the server, including clickedLat and clickedLng
       sendDataToServer(userInput, clickedLat, clickedLng);
     }
-  }
+  });
 
   // Example function to send data to a server
   function sendDataToServer(data, lat, lng) {
