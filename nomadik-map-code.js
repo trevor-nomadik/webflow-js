@@ -155,38 +155,43 @@ function initMap() {
       }
   });
 
-  // Add a right-click event listener to the map
-  google.maps.event.addListener(map, 'rightclick', function(event) {
-    handleMapClick(event);
-  });
-
-  // Variables to track touch start and end times
+  // Variables to track touch start and whether it should trigger a long press
   var touchStartTime = 0;
-  var touchEndTime = 0;
+  var longPressTriggered = false;
 
-  // Add touchstart event listener to the map
-  google.maps.event.addListener(map, 'touchstart', function(event) {
-    // Record the time when the touch started
-    touchStartTime = new Date().getTime();
-  }, {passive: true}); // Add passive: true to not block scrolling
-
-  // Add touchend event listener to the map
-  google.maps.event.addListener(map, 'touchend', function(event) {
-    // Record the time when the touch ended
-    touchEndTime = new Date().getTime();
-    // Check if the touch duration exceeds the threshold for a long press (e.g., 500 ms)
-    if (touchEndTime - touchStartTime > 500) {
-      // Prevent the default click behavior
-      event.preventDefault();
-      // Convert the touch point to a LatLng object
-      var touchPoint = event.latLng; 
-      if (!touchPoint) {
-        // Fallback 
+  // Function to calculate and handle the long press on the map
+  function setupMapLongPressHandler(map) {
+    google.maps.event.addListener(map, 'mousedown', function(event) {
+      // For desktop browsers, handle right-click
+      if (event.button === 2) { // Right mouse button was pressed
+        handleMapClick(event.latLng);
       }
-      // Call the function to handle the map click or long press
-      handleMapClick({latLng: touchPoint});
-    }
-  });
+    });
+
+    map.addListener('touchstart', function(e) {
+      touchStartTime = new Date().getTime();
+      longPressTriggered = false; // Reset this flag at the start of a touch
+      e.preventDefault(); // Consider preventing default to avoid map dragging and zooming
+    }, {passive: false});
+
+    map.addListener('touchend', function(e) {
+      var touchEndTime = new Date().getTime();
+      if (touchEndTime - touchStartTime > 500 && !longPressTriggered) { // 500 ms for long press
+        longPressTriggered = true; // Set the flag so it doesn't trigger multiple times
+        var touchPoint = e.va.changedTouches[0]; // Get the touch point
+        var point = new google.maps.Point(touchPoint.clientX, touchPoint.clientY);
+        // Convert the touch point to latLng coordinates
+        var latLng = map.getProjection().fromPointToLatLng(point);
+        handleMapClick(latLng);
+      }
+    });
+
+    map.addListener('touchmove', function() {
+      touchStartTime = 0; // Reset start time on move to cancel long press detection
+    });
+  }
+
+  setupMapLongPressHandler(map);
 
   // Function to handle map clicks or long presses
   function handleMapClick(event) {
