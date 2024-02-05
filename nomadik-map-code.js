@@ -6,10 +6,40 @@ function initMap() {
     mapTypeControl: false,
     streetViewControl: false,
     styles: [
-        {
-            featureType: 'poi',   // Hide all points of interest
-            stylers: [{ visibility: 'off' }]
-        }
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "poi",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      }
     ]
   });
 
