@@ -46,7 +46,7 @@ function initMap() {
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
   pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
-  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png'; 
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png)'; 
   pointSelectionButton.style.backgroundSize = 'contain';
   pointSelectionButton.style.backgroundRepeat = 'no-repeat';
   pointSelectionButton.style.backgroundPosition = 'center';
