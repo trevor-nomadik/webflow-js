@@ -147,19 +147,7 @@ function initMap() {
         population = "Unknown";
       }
 
-      // Check if URL is valid
-      var isUrlValid = url && (url.startsWith('http://') || url.startsWith('https://'));
-
-      // Modify contentString based on whether the URL is valid
-      var contentString;
-      if (isUrlValid) {
-          contentString = '<div><strong><a href="' + url + '" target="_blank">' + name + '</a></strong></div>';
-      } else {
-          contentString = '<div><strong>' + name + '</strong></div>'; // Name is not clickable
-          console.log("url not clickable.")
-      }
-
-      contentString += '<div>Population Estimate: ' + population + '</div>' +
+      contentString = '<div>Population Estimate: ' + population + '</div>' +
                       '<div>Still here?</div>' +
                       '<button id="yesBtn">Yes</button>' +
                       '<button id="noBtn">No</button>';
