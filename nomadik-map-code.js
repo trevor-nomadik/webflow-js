@@ -6,47 +6,17 @@ function initMap() {
     mapTypeControl: false,
     streetViewControl: false,
     styles: [
-      {
-        "featureType": "administrative",
-        "elementType": "geometry",
-        "stylers": [
-          {
-            "visibility": "off"
-          }
-        ]
-      },
-      {
-        "featureType": "poi",
-        "stylers": [
-          {
-            "visibility": "off"
-          }
-        ]
-      },
-      {
-        "featureType": "road",
-        "elementType": "labels.icon",
-        "stylers": [
-          {
-            "visibility": "off"
-          }
-        ]
-      },
-      {
-        "featureType": "transit",
-        "stylers": [
-          {
-            "visibility": "off"
-          }
-        ]
-      }
+        {
+            featureType: 'poi',   // Hide all points of interest
+            stylers: [{ visibility: 'off' }]
+        }
     ]
   });
 
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
   pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
-  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png)'; 
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png'; 
   pointSelectionButton.style.backgroundSize = 'contain';
   pointSelectionButton.style.backgroundRepeat = 'no-repeat';
   pointSelectionButton.style.backgroundPosition = 'center';
@@ -158,6 +128,8 @@ function initMap() {
     };
   });
   
+  google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
+  
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
   var infoWindowOpened = false;
@@ -261,8 +233,29 @@ function initMap() {
         map.removeOverlay(marker);
       });
     } else {
-      console.info('No User data');
+      // Remove the marker if no input was provided
+      marker.setMap(null);
     }
+  }
+
+  function generateUUID() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 = (performance && performance.now && (performance.now()*1000)) || 0; //Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if(d > 0){ //Use timestamp until depleted
+            r = (d + r)%16 | 0;
+            d = Math.floor(d/16);
+        } else { //Use microseconds since page-load if supported
+            r = (d2 + r)%16 | 0;
+            d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+}
+  
+  function setDefaultClickMode() {
+    drawingManager.setDrawingMode(null); // Set to null to enable clicking
   }
 
   function showThankYouModal() {
