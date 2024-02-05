@@ -62,7 +62,7 @@ function initMap() {
   // Create and append the search bar to the sidebar
   const searchInput = document.createElement('input');
   searchInput.setAttribute('type', 'text');
-  searchInput.setAttribute('placeholder', 'Search polygons...');
+  searchInput.setAttribute('placeholder', 'Search camps...');
   searchInput.style.width = '100%';
   searchInput.style.padding = '10px';
   searchInput.style.marginBottom = '10px';
