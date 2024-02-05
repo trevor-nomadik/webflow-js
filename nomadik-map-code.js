@@ -13,6 +13,50 @@ function initMap() {
     ]
   });
 
+  // Create a button and set its properties
+  var pointSelectionButton = document.createElement('button');
+  pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png'; 
+  pointSelectionButton.style.backgroundSize = 'contain';
+  pointSelectionButton.style.backgroundRepeat = 'no-repeat';
+  pointSelectionButton.style.backgroundPosition = 'center';
+  pointSelectionButton.style.width = '50px'; 
+  pointSelectionButton.style.height = '50px'; 
+  pointSelectionButton.style.border = 'none';
+  pointSelectionButton.style.cursor = 'pointer';
+  pointSelectionButton.style.padding = '0';
+  pointSelectionButton.style.margin = '10px';
+  pointSelectionButton.style.backgroundColor = 'transparent'; 
+  // Add the button to the map
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(pointSelectionButton);
+
+  let isPointSelectionModeEnabled = false;
+
+  // Listen for button clicks to toggle point selection mode
+  pointSelectionButton.addEventListener('click', () => {
+    isPointSelectionModeEnabled = !isPointSelectionModeEnabled;
+  });
+
+  // Modify your map click event listener
+  google.maps.event.addListener(map, 'click', function(event) {
+    if (isPointSelectionModeEnabled) {
+      // Capture the clicked location
+      var clickedLat = event.latLng.lat();
+      var clickedLng = event.latLng.lng();
+
+      // Prompt the user for input
+      var userInput = prompt("What's going on here?", "");
+
+      // Reset point selection mode
+      isPointSelectionModeEnabled = false;
+
+      // If user input is provided, send data to the server
+      if (userInput !== null && userInput !== "") {
+        sendDataToServer(userInput, clickedLat, clickedLng);
+      }
+    }
+  });
+
   var polygonList = document.getElementById('sidebar'); 
 
   // Create and append the search bar to the sidebar
@@ -172,7 +216,7 @@ function initMap() {
   });
 
   // Example function to send data to a server
-  function sendDataToServer(data, lat, lng) {
+  function sendDataToServer(userInput, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
     if (userInput !== null && userInput.trim() !== "") {
       // Prepare the data to be sent
@@ -182,10 +226,11 @@ function initMap() {
       });
 
       // Sending the data to your endpoint
-      fetch('https://yourserver.com/api/point', {
+      fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/poi', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Origin': 'https://www.nomadik.ai',
+          'Content-Type': 'application/json'
         },
         body: dataToSend
       })
