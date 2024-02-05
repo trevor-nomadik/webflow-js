@@ -6,10 +6,40 @@ function initMap() {
     mapTypeControl: false,
     streetViewControl: false,
     styles: [
-        {
-            featureType: 'poi',   // Hide all points of interest
-            stylers: [{ visibility: 'off' }]
-        }
+      {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "poi",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "transit",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      }
     ]
   });
 
@@ -128,8 +158,6 @@ function initMap() {
     };
   });
   
-  google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
-  
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
   var infoWindowOpened = false;
@@ -229,7 +257,12 @@ function initMap() {
       })
       .catch((error) => {
         console.error('Error:', error);
+        // Handle errors, by removing the marker
+        map.removeOverlay(marker);
       });
+    } else {
+      console.info('No User data');
+    }
   }
 
   function showThankYouModal() {
