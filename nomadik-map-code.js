@@ -147,7 +147,8 @@ function initMap() {
         population = "Unknown";
       }
 
-      contentString = '<div>Population Estimate: ' + population + '</div>' +
+      contentString = '<div><strong>' + name + '</strong></div>' +
+                      '<div>Population Estimate: ' + population + '</div>' +
                       '<div>Still here?</div>' +
                       '<button id="yesBtn">Yes</button>' +
                       '<button id="noBtn">No</button>';
