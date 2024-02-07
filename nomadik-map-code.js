@@ -70,7 +70,7 @@ function initMap() {
   polygonList.insertBefore(searchInput, polygonList.firstChild);
 
   fetch(
-    'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/campPolygons',
+    'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/camps/polygons',
     {
       method: 'GET',
       headers: {
@@ -215,7 +215,7 @@ function initMap() {
       });
 
       // Sending the data to your endpoint
-      fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/poi', {
+      fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/submitPOI', {
         method: 'POST',
         headers: {
           'Origin': 'https://www.nomadik.ai',
