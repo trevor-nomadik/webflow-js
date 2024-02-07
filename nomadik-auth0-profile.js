@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
       domain: 'dev-oxu1mjqlqdkb8h1l.us.auth0.com',
       client_id: 'LNtA6Fn3VpVyKikh3CcxrF9xqRN93hyy',
       redirect_uri: window.location.origin,
-      scope: 'openid profile email' 
+      scope: 'openid profile email',
+      cacheLocation: 'localstorage',
     });
   
     // Check if the user is authenticated
