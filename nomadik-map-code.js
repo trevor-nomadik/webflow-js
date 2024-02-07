@@ -128,8 +128,6 @@ function initMap() {
     };
   });
   
-  google.maps.event.addListenerOnce(map, 'idle', setDefaultClickMode);
-  
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
   var infoWindowOpened = false;
@@ -254,10 +252,6 @@ function initMap() {
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
-  
-  function setDefaultClickMode() {
-    drawingManager.setDrawingMode(null); // Set to null to enable clicking
-  }
 
   function showThankYouModal() {
     // Create the modal container
