@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Check and display user's email
             const userEmailElement = document.getElementById('auth-email');
             if(userEmailElement) {
-                userEmailElement.textContent = user.name || 'No Email Provided';
+                userEmailElement.textContent = user.email || 'No Email Provided';
             }
   
             // Check and display user's profile picture
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       } else {
         // User is not logged in, redirect or handle accordingly
-        console.error('Authentication check failed:', err);
+        console.info('User not authenticated');
         window.location.href = '/'; // Redirect to home page
       }
     }).catch(function(err) {
