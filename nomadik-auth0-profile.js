@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       } else {
         // User is not logged in, redirect or handle accordingly
-        window.location.href = '/home'; // Redirect to login page
+        console.error('Authentication check failed:', err);
       }
     }).catch(function(err) {
       console.error('Authentication check failed:', err);
