@@ -55,11 +55,14 @@ const logout = () => {
 const updateUI = async () => {
     const isAuthenticated = await auth0.isAuthenticated();
     const btn = document.getElementById('auth-button'); 
+    const profileLink = document.getElementById('profile-link');
 
     if (isAuthenticated) {
         btn.innerText = 'Logout';
+        if(profileLink) profileLink.style.display = 'block';
     } else {
         btn.innerText = 'Login';
+        if(profileLink) profileLink.style.display = 'none';
     }
 };
 
