@@ -18,17 +18,6 @@ window.onload = async () => {
     }
 };
   
-// Function to run when the page loads to handle the authentication result
-window.onload = async () => {
-    try {
-      await auth0.handleRedirectCallback();
-      updateUI(); // Update UI based on login state
-      window.history.replaceState({}, document.title, "/"); // Clean up the URL
-    } catch (err) {
-      console.error("Error handling redirect callback: ", err);
-    }
-};
-  
 // Function to dynamically login or logout based on the current state
 const toggleAuth = async () => {
     const isAuthenticated = await auth0.isAuthenticated();
@@ -59,10 +48,10 @@ const updateUI = async () => {
 
     if (isAuthenticated) {
         btn.innerText = 'Logout';
-        if(profileLink) profileLink.style.display = 'block';
+        profileLink.style.display = 'block';
     } else {
         btn.innerText = 'Login';
-        if(profileLink) profileLink.style.display = 'none';
+        profileLink.style.display = 'none';
     }
 };
 
