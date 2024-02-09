@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the Auth0 client
     const auth0 = new Auth0Client({
       domain: 'dev-oxu1mjqlqdkb8h1l.us.auth0.com',
-      client_id: 'SIdFpei8f7cUhfHTk9QPWU8SEgizV6np',
+      client_id: 'LNtA6Fn3VpVyKikh3CcxrF9xqRN93hyy',
       redirect_uri: window.location.origin,
       scope: 'openid profile email',
       cacheLocation: 'localstorage',
