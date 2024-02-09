@@ -46,13 +46,15 @@ const updateUI = async () => {
     const btn = document.getElementById('auth-button'); 
     const profileLink = document.getElementById('profile-link');
 
-    if (isAuthenticated) {
-        btn.innerText = 'Logout';
-        profileLink.style.display = 'block';
-    } else {
-        btn.innerText = 'Login';
-        profileLink.style.display = 'none';
-    }
+    // if (isAuthenticated) {
+    //     btn.innerText = 'Logout';
+    //     profileLink.style.display = 'block';
+    // } else {
+    //     btn.innerText = 'Login';
+    //     profileLink.style.display = 'none';
+    // }
+    profileLink.style.display = 'none';
+    btn.style.display = 'none';
 };
 
 // Attach the toggle function to the button
