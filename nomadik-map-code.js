@@ -137,7 +137,6 @@ function initMap() {
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
-      var url = event.feature.getProperty('url'); 
 
       var population = event.feature.getProperty('population');
       // Check if population is not a number or undefined
@@ -156,21 +155,29 @@ function initMap() {
 
       // Position the info window on the clicked location
       infoWindow.setPosition(event.latLng);
+      var clickedLat = event.latLng.lat();
+      var clickedLng = event.latLng.lng();
 
       // Open the info window
       infoWindow.open(map);
 
-      // Attach event listeners to the buttons after a slight delay to ensure DOM 				elements are created
+      // Attach event listeners to the buttons after a slight delay to ensure DOM elements are created
       google.maps.event.addListenerOnce(infoWindow, 'domready', function(){
           document.getElementById('yesBtn').addEventListener('click', function() {
-              console.log('User clicked Yes');
-              // Handle the "Yes" response here
+              var descriptionString = JSON.stringify({
+                polygonName: name,
+                response: true
+            });
+              sendDataToServer(descriptionString, clickedLat, clickedLng);
               infoWindow.close();
           });
 
           document.getElementById('noBtn').addEventListener('click', function() {
-              console.log('User clicked No');
-              // Handle the "No" response here
+              var descriptionString = JSON.stringify({
+                polygonName: name,
+                response: false
+            });
+              sendDataToServer(descriptionString, clickedLat, clickedLng);
               infoWindow.close();
           });
       });
@@ -202,7 +209,6 @@ function initMap() {
     }
   });
 
-  // Example function to send data to a server
   function sendDataToServer(userInput, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
     if (userInput !== null && userInput.trim() !== "") {
