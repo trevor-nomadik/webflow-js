@@ -234,13 +234,7 @@ function initMap() {
       })
       .catch((error) => {
         console.error('Error:', error);
-        // Handle errors, by removing the marker
-        map.removeOverlay(marker);
       });
-    } else {
-      // Remove the marker if no input was provided
-      marker.setMap(null);
-    }
   }
 
   function generateUUID() {
