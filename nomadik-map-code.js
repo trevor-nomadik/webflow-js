@@ -136,8 +136,45 @@ function initMap() {
         });
     }
     map.fitBounds(bounds); // Zooms the map to the bounds
-}
-  
+  }
+
+  // Create a heatmap data array
+  var heatmapData = [];
+
+  // Create a heatmap layer
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatmapData,
+    map: map
+  });
+
+  // Fetch heatmap data from your server
+  fetchHeatmapData().then(data => {
+    // Update heatmap data array
+    heatmapData = data;
+    // Set heatmap data
+    heatmap.setData(heatmapData);
+  });
+
+  function fetchHeatmapData() {
+    return fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/debris/heatmap')
+      .then(response => response.json())
+      .then(data => {
+        // Check if "debrisHeatmap" array exists in the response
+        if (!data.debrisHeatmap || !Array.isArray(data.debrisHeatmap)) {
+          throw new Error('Invalid response format: debrisHeatmap array not found');
+        }
+
+        // Extract latitude, longitude, and weight from each data point
+        return data.debrisHeatmap.map(point => ({
+          location: new google.maps.LatLng(point.lat, point.lng),
+          weight: point.weight
+        }));
+      })
+      .catch(error => {
+        console.error('Error fetching heatmap data:', error);
+        return []; // Return empty array if there's an error
+      });
+  }
   
    // Set style based on feature properties
   map.data.setStyle(function(feature) {
@@ -146,6 +183,51 @@ function initMap() {
       strokeWeight: feature.getProperty('stroke-width')
     };
   });
+
+  // Create toggle controls
+  var toggleCampsControlDiv = document.createElement('div');
+  var toggleHeatmapControlDiv = document.createElement('div');
+
+  // Create toggle buttons
+  var toggleCampsButton = document.createElement('button');
+  var toggleHeatmapButton = document.createElement('button');
+
+  // Customize toggle buttons
+  toggleCampsButton.textContent = 'Toggle Camps';
+  toggleHeatmapButton.textContent = 'Toggle Heatmap';
+
+  // Add classes to toggle controls for styling
+  toggleCampsControlDiv.className = 'custom-control';
+  toggleHeatmapControlDiv.className = 'custom-control';
+
+  // Add event listeners to toggle buttons
+  toggleCampsButton.addEventListener('click', function() {
+    toggleCamps();
+  });
+
+  toggleHeatmapButton.addEventListener('click', function() {
+    toggleHeatmap();
+  });
+
+  // Append toggle buttons to toggle controls
+  toggleCampsControlDiv.appendChild(toggleCampsButton);
+  toggleHeatmapControlDiv.appendChild(toggleHeatmapButton);
+
+  // Add toggle controls to the map
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleCampsControlDiv);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleHeatmapControlDiv);
+
+  // Function to toggle Camps visibility
+  function toggleCamps() {
+    // Toggle visibility of map data layer
+    map.data.setMap(map.data.getMap() ? null : map);
+  }
+
+  // Function to toggle heatmap visibility
+  function toggleHeatmap() {
+    // Toggle visibility of heatmap layer
+    heatmap.setMap(heatmap.getMap() ? null : map);
+  }
   
   // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
