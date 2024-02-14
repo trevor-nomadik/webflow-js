@@ -118,6 +118,25 @@ function initMap() {
       console.error('Error loading GeoJSON:', error);
       // Handle the error as needed
   });
+
+
+  function zoomToFeature(feature, map) {
+    const bounds = new google.maps.LatLngBounds();
+    const geometry = feature.geometry;
+    if (geometry.type === 'Polygon') {
+        geometry.coordinates[0].forEach(coord => {
+            bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+        });
+    } else if (geometry.type === 'MultiPolygon') {
+        // For MultiPolygon, iterate through each polygon
+        geometry.coordinates.forEach(polygon => {
+            polygon[0].forEach(coord => {
+                bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+            });
+        });
+    }
+    map.fitBounds(bounds); // Zooms the map to the bounds
+}
   
   
    // Set style based on feature properties
@@ -251,7 +270,7 @@ function initMap() {
         }
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
-}
+  }
 
   function showThankYouModal() {
     // Create the modal container
@@ -294,26 +313,8 @@ function initMap() {
     // Append modal to the body
     document.body.appendChild(modal);
   }
+}
 
-  function zoomToFeature(feature, map) {
-      const bounds = new google.maps.LatLngBounds();
-      const geometry = feature.geometry;
-      if (geometry.type === 'Polygon') {
-          geometry.coordinates[0].forEach(coord => {
-              bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
-          });
-      } else if (geometry.type === 'MultiPolygon') {
-          // For MultiPolygon, iterate through each polygon
-          geometry.coordinates.forEach(polygon => {
-              polygon[0].forEach(coord => {
-                  bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
-              });
-          });
-      }
-      map.fitBounds(bounds); // Zooms the map to the bounds
-  }
-}
-}
 
 // CoT Functions
 function createCotPoint(latitude, longitude, altitude, circularError, heightError) {
@@ -417,3 +418,4 @@ function createCotAtomMessage(uid, callsign, cotType, latitude, longitude, altit
 
     return root;
   }
+}
