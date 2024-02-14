@@ -313,6 +313,7 @@ function initMap() {
       map.fitBounds(bounds); // Zooms the map to the bounds
   }
 }
+}
 
 // CoT Functions
 function createCotPoint(latitude, longitude, altitude, circularError, heightError) {
@@ -382,37 +383,37 @@ function createCotAtomMessage(uid, callsign, cotType, latitude, longitude, altit
   return root;
 }
 
-function createCotPolygonMessage(uid, callsign, latitude, longitude, polygon, altitude, circularError, heightError, affiliation, startTime, staleTime) {
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
-  let root = xmlDoc.documentElement;
-  root.setAttribute('version', '2.0');
-  root.setAttribute('type', 'u-d-f');
-  root.setAttribute('uid', uid);
-  root.setAttribute('how', 'm-g');
-  root.setAttribute('time', startTime.toISOString());
-  root.setAttribute('start', startTime.toISOString());
-  root.setAttribute('stale', staleTime.toISOString());
+  function createCotPolygonMessage(uid, callsign, latitude, longitude, polygon, altitude, circularError, heightError, affiliation, startTime, staleTime) {
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
+    let root = xmlDoc.documentElement;
+    root.setAttribute('version', '2.0');
+    root.setAttribute('type', 'u-d-f');
+    root.setAttribute('uid', uid);
+    root.setAttribute('how', 'm-g');
+    root.setAttribute('time', startTime.toISOString());
+    root.setAttribute('start', startTime.toISOString());
+    root.setAttribute('stale', staleTime.toISOString());
 
-  let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
+    let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
 
-  let contact = xmlDoc.createElement('contact');
-  contact.setAttribute('callsign', callsign);
+    let contact = xmlDoc.createElement('contact');
+    contact.setAttribute('callsign', callsign);
 
-  let colorFields = createCotColorFields(affiliation);
+    let colorFields = createCotColorFields(affiliation);
 
-  let detail = xmlDoc.createElement('detail');
+    let detail = xmlDoc.createElement('detail');
 
-  polygon.forEach(coords => {
-      let link = xmlDoc.createElement('link');
-      link.setAttribute('point', `${coords[1]},${coords[0]},0`);
-      detail.appendChild(link);
-  });
+    polygon.forEach(coords => {
+        let link = xmlDoc.createElement('link');
+        link.setAttribute('point', `${coords[1]},${coords[0]},0`);
+        detail.appendChild(link);
+    });
 
-  colorFields.forEach(field => detail.appendChild(field));
+    colorFields.forEach(field => detail.appendChild(field));
 
-  root.appendChild(point);
-  root.appendChild(detail);
+    root.appendChild(point);
+    root.appendChild(detail);
 
-  return root;
-}
+    return root;
+  }
