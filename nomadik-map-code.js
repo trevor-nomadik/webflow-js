@@ -194,7 +194,7 @@ function initMap() {
 
   // Customize toggle buttons
   toggleCampsButton.textContent = 'Toggle Camps';
-  toggleHeatmapButton.textContent = 'Toggle Heatmap';
+  toggleHeatmapButton.textContent = 'Toggle Debris';
 
   // Add classes to toggle controls for styling
   toggleCampsControlDiv.className = 'custom-control';
