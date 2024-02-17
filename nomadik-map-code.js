@@ -15,6 +15,8 @@ function initMap() {
 
   // Initialize the Places service
   var service = new google.maps.places.PlacesService(map);
+  var resourceWindow = new google.maps.InfoWindow();
+  var resourceWindowOpened = false;
 
   // Function to create a marker for a place
   function createMarkerForPlace(placeId) {
@@ -27,12 +29,11 @@ function initMap() {
           title: place.name
         });
 
-        // Optionally, add an info window with details
-        var infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(marker, 'click', function() {
-          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+          resourceWindowOpened = true;
+          resourceWindow.setContent('<div><strong>' + place.name + '</strong><br>' +
             place.formatted_address + '</div>');
-          infowindow.open(map, this);
+            resourceWindow.open(map, this);
         });
       }
     });
@@ -333,6 +334,10 @@ function initMap() {
           // If it was, set the flag to false and do nothing else
           infoWindowOpened = false;
           infoWindow.close();
+      }
+      if (resourceWindowOpened) {
+        resourceWindowOpened = false;
+        resourceWindow.close();
       }
   });
 
