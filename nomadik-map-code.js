@@ -2,7 +2,7 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 12,
     center: {lat: 30.266666, lng: -97.733330} ,
-    mapTypeId: 'satellite',
+    mapTypeId: 'hybrid',
     mapTypeControl: false,
     streetViewControl: false,
     styles: [
@@ -12,6 +12,35 @@ function initMap() {
         }
     ]
   });
+
+  // Initialize the Places service
+  var service = new google.maps.places.PlacesService(map);
+
+  // Function to create a marker for a place
+  function createMarkerForPlace(placeId) {
+    service.getDetails({placeId: placeId}, function(place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        // Create a marker for the place
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location,
+          title: place.name
+        });
+
+        // Optionally, add an info window with details
+        var infowindow = new google.maps.InfoWindow();
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+            'Place ID: ' + place.place_id + '<br>' +
+            place.formatted_address + '</div>');
+          infowindow.open(map, this);
+        });
+      }
+    });
+  }
+
+  // Resource markers
+  createMarkerForPlace('ChIJPXBW86a1RIYRLHKKgjK4Nf0');
 
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
@@ -160,7 +189,7 @@ function initMap() {
       .then(response => response.json())
       .then(data => {
         // Check if "debrisHeatmap" array exists in the response
-        if (!data.debrisHeatmap || !Array.isArray(data.debrisHeatmap)) {
+        if (!data.debrisHeatmap) {
           throw new Error('Invalid response format: debrisHeatmap array not found');
         }
 
