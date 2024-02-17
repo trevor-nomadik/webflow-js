@@ -31,7 +31,6 @@ function initMap() {
         var infowindow = new google.maps.InfoWindow();
         google.maps.event.addListener(marker, 'click', function() {
           infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-            'Place ID: ' + place.place_id + '<br>' +
             place.formatted_address + '</div>');
           infowindow.open(map, this);
         });
@@ -41,6 +40,20 @@ function initMap() {
 
   // Resource markers
   createMarkerForPlace('ChIJPXBW86a1RIYRLHKKgjK4Nf0');
+  createMarkerForPlace('ChIJba0zGqe1RIYRxXZrt1HYUy8');
+  createMarkerForPlace('ChIJT2rMMjVLW4YR75-Nm2Xw9pE');
+  createMarkerForPlace('ChIJ3xGz3NVLW4YRh14R2m6ItFY');
+  createMarkerForPlace('ChIJV7Qp1jy3RIYRThfOaekUXn4');
+  createMarkerForPlace('ChIJjXZz26S3RIYRWikXkKilWBM');
+  createMarkerForPlace('ChIJbZNlfIBKW4YRDbSlExVETlQ');
+  createMarkerForPlace('ChIJ46yo1pbJRIYR6IsIGmKyat8');
+  createMarkerForPlace('ChIJHcmXZBbNRIYRBjw7odKk1RE');
+  createMarkerForPlace('ChIJU1B9-bq3RIYRDTvbVJ2alxk');
+  createMarkerForPlace('ChIJC4wKqAK1RIYR0dxyI3A9wtE');
+  createMarkerForPlace('ChIJF-srX6a1RIYR4sPOhIuCleg');
+  createMarkerForPlace('ChIJWzrzburLRIYR5M5XUuslO6U');
+  createMarkerForPlace('ChIJq4sFNKe1RIYRuMxP-mYQyps');
+  createMarkerForPlace('ChIJ18R8S1KxRIYRUadsdsL4rQU');
 
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
