@@ -30,8 +30,8 @@ function initMap() {
           icon: {
             path: google.maps.SymbolPath.CIRCLE, 
             scale: 5, 
-            strokeColor: 'blue',
-            fillColor: 'blue',
+            strokeColor: '#ADD8E6',
+            fillColor: '#ADD8E6',
             fillOpacity: 0.8, 
             strokeWeight: 2 
           }
