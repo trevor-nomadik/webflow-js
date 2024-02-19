@@ -55,7 +55,8 @@ function initMap() {
     'ChIJF-srX6a1RIYR4sPOhIuCleg',
     'ChIJWzrzburLRIYR5M5XUuslO6U',
     'ChIJq4sFNKe1RIYRuMxP-mYQyps',
-    'ChIJ18R8S1KxRIYRUadsdsL4rQU'
+    'ChIJ18R8S1KxRIYRUadsdsL4rQU',
+    'ChIJB1_oUG22RIYRDKyqXG1oHeA'
   ];
 
   // Function to create a marker for each Place ID
