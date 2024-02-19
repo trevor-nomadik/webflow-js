@@ -26,7 +26,15 @@ function initMap() {
         var marker = new google.maps.Marker({
           map: map,
           position: place.geometry.location,
-          title: place.name
+          title: place.name,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE, 
+            scale: 5, 
+            strokeColor: 'blue',
+            fillColor: 'blue',
+            fillOpacity: 0.8, 
+            strokeWeight: 2 
+          }
         });
 
         google.maps.event.addListener(marker, 'click', function() {
