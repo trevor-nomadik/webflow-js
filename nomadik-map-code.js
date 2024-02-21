@@ -14,58 +14,77 @@ function initMap() {
   });
 
   // Initialize the Places service
-  var service = new google.maps.places.PlacesService(map);
+  // var service = new google.maps.places.PlacesService(map);
   var resourceWindow = new google.maps.InfoWindow();
   var resourceWindowOpened = false;
 
   // Function to create a marker for a place
   function createMarkerForPlace(placeId) {
-    service.getDetails({placeId: placeId}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        // Create a marker for the place
-        var marker = new google.maps.Marker({
-          map: map,
-          position: place.geometry.location,
-          title: place.name,
-          icon: {
-            path: google.maps.SymbolPath.CIRCLE, 
-            scale: 5, 
-            strokeColor: '#ADD8E6',
-            fillColor: '#ADD8E6',
-            fillOpacity: 0.8, 
-            strokeWeight: 2 
-          }
-        });
-
-        google.maps.event.addListener(marker, 'click', function() {
-          resourceWindowOpened = true;
-          resourceWindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-            place.formatted_address + '</div>');
-            resourceWindow.open(map, this);
-        });
+    //service.getDetails({placeId: placeId}, function(place, status) {
+      //if (status === google.maps.places.PlacesServiceStatus.OK) {
+      // Create a marker for the place
+    var marker = new google.maps.Marker({
+      map: map,
+      position: {lat: placeId.lat, lng: placeId.lng},
+      title: placeId.title,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE, 
+        scale: 5, 
+        strokeColor: 'blue',
+        fillColor: 'blue',
+        fillOpacity: 1, 
+        strokeWeight: 2 
       }
     });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      resourceWindowOpened = true;
+      resourceWindow.setContent('<div><strong>' + placeId.title + '</strong><br>' +
+      placeId.info + '</div>');
+        resourceWindow.open(map, this);
+    });
+    //}
+    //});
   }
 
   // Resource markers
-  const placeIds = [
-    'ChIJPXBW86a1RIYRLHKKgjK4Nf0',
-    'ChIJba0zGqe1RIYRxXZrt1HYUy8',
-    'ChIJT2rMMjVLW4YR75-Nm2Xw9pE',
-    'ChIJ3xGz3NVLW4YRh14R2m6ItFY',
-    'ChIJV7Qp1jy3RIYRThfOaekUXn4',
-    'ChIJjXZz26S3RIYRWikXkKilWBM',
-    'ChIJbZNlfIBKW4YRDbSlExVETlQ',
-    'ChIJ46yo1pbJRIYR6IsIGmKyat8',
-    'ChIJHcmXZBbNRIYRBjw7odKk1RE',
-    'ChIJU1B9-bq3RIYRDTvbVJ2alxk',
-    'ChIJC4wKqAK1RIYR0dxyI3A9wtE',
-    'ChIJF-srX6a1RIYR4sPOhIuCleg',
-    'ChIJWzrzburLRIYR5M5XUuslO6U',
-    'ChIJq4sFNKe1RIYRuMxP-mYQyps',
-    'ChIJ18R8S1KxRIYRUadsdsL4rQU',
-    'ChIJB1_oUG22RIYRDKyqXG1oHeA'
-  ];
+  const places = placeIds = [
+    {lat: 30.26774146155133, lng: -97.73753706227464, title: 'Austin Resource Center for the Homeless (ARCH)', info: 'Address: 500 E 7th St, Austin, TX 78701'},
+    {lat: 30.268497261509022, lng: -97.73946040980792, title: 'Trinity Center Austin', info: 'Address: 304 E 7th St, Austin, TX 78701'},
+    {lat: 30.26849667265927, lng: -97.73947541693146, title: 'Texas Homeless Network', info: 'Address: 3000 S I-35 Frontage Rd Suite 100, Austin, TX 78704'},
+    {lat: 30.228698875231068, lng: -97.78958929041364, title: 'Sunrise Homeless Navigation Center', info: 'Address: 4430 Menchaca Rd, Austin, TX 78745'},
+    {lat: 30.282746342716603, lng: -97.66879679538734, title: 'Austin Shelter for Women and Children', info: 'Address: 4613 Tannehill Ln Bldg 3, Austin, TX 78721'},
+    {lat: 30.283141995464007, lng: -97.67069734815385, title: 'The Salvation Army Rathgeber Center', info: 'Address: 4613 Tannehill Ln Bldg 1, Austin, TX 78721'},
+    {lat: 30.280876916425328, lng: -97.62264094499601, title: 'Mobile Loaves & Fishes', info: 'Address: 9301 Hog Eye Rd Suite 950, Austin, TX 78724'},
+    {lat: 30.289115627599863, lng: -97.82614561990913, title: 'Mobile Loaves & Fishes - Food Distribution Center', info: 'Address: 903 S Capital of Texas Hwy, Austin, TX 78746'},
+    {lat: 30.335209549437014, lng: -97.72008111674216, title: 'Foundation For the Homeless', info: 'Address: 6719 N Lamar Blvd Suite D, Austin, TX 78752'},
+    {lat: 30.432696502633007, lng: -97.76480269563608, title: 'The Charlie Center', info: 'Address: 12675 Research Blvd, Austin, TX 78759'},
+    {lat: 30.230085901310634, lng: -97.68664458699638, title: 'Esperanza Community', info: 'Address: 780 Bastrop Hwy, Austin, TX 78741'},
+    {lat: 30.230853716975894, lng: -97.70592322727704, title: 'SAFE', info: 'Address: 1515 Grove Blvd, Austin, TX 78741'},
+    {lat: 30.370212492285955, lng: -97.71639161397448, title: 'Caritas of Austin North', info: 'Address: 9027 Northgate Blvd, Austin, TX 78758'},
+    {lat: 30.26994235159411, lng: -97.73990412989762, title: 'Caritas Of Austin - Food Distribution Center', info: 'Address: Parking lot, Austin, TX 78701'},
+    {lat: 30.267501851630694, lng: -97.73777855397638, title: 'Caritas Of Austin', info: 'Address: 611 Neches St, Austin, TX 78701'},
+    {lat: 30.20603224134893, lng: -97.69028333172862, title: 'Austin VA', info: 'Address: 7600 Metropolis Dr Building 5, Austin, TX 78744'},
+    {lat: 30.27863040901693, lng: -97.6869438054589, title: 'Hungry Hill Foundation', info: 'Address: 1189 Springdale Rd, Austin, TX 78721'},
+  ]
+  // const placeIds = [
+  //   'ChIJPXBW86a1RIYRLHKKgjK4Nf0',
+  //   'ChIJba0zGqe1RIYRxXZrt1HYUy8',
+  //   'ChIJT2rMMjVLW4YR75-Nm2Xw9pE',
+  //   'ChIJ3xGz3NVLW4YRh14R2m6ItFY',
+  //   'ChIJV7Qp1jy3RIYRThfOaekUXn4',
+  //   'ChIJjXZz26S3RIYRWikXkKilWBM',
+  //   'ChIJbZNlfIBKW4YRDbSlExVETlQ',
+  //   'ChIJ46yo1pbJRIYR6IsIGmKyat8',
+  //   'ChIJHcmXZBbNRIYRBjw7odKk1RE',
+  //   'ChIJU1B9-bq3RIYRDTvbVJ2alxk',
+  //   'ChIJC4wKqAK1RIYR0dxyI3A9wtE',
+  //   'ChIJF-srX6a1RIYR4sPOhIuCleg',
+  //   'ChIJWzrzburLRIYR5M5XUuslO6U',
+  //   'ChIJq4sFNKe1RIYRuMxP-mYQyps',
+  //   'ChIJ18R8S1KxRIYRUadsdsL4rQU',
+  //   'ChIJB1_oUG22RIYRDKyqXG1oHeA'
+  // ];
 
   // Function to create a marker for each Place ID
   placeIds.forEach(placeId => {
