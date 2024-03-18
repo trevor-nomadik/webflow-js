@@ -30,8 +30,8 @@ function initMap() {
       icon: {
         path: google.maps.SymbolPath.CIRCLE, 
         scale: 5, 
-        strokeColor: 'blue',
-        fillColor: 'blue',
+        strokeColor: 'green',
+        fillColor: 'green',
         fillOpacity: 1, 
         strokeWeight: 2 
       }
@@ -43,8 +43,6 @@ function initMap() {
       placeId.info + '</div>');
         resourceWindow.open(map, this);
     });
-    //}
-    //});
   }
 
   // Resource markers
@@ -67,24 +65,6 @@ function initMap() {
     {lat: 30.20603224134893, lng: -97.69028333172862, title: 'Austin VA', info: 'Address: 7600 Metropolis Dr Building 5, Austin, TX 78744'},
     {lat: 30.27863040901693, lng: -97.6869438054589, title: 'Hungry Hill Foundation', info: 'Address: 1189 Springdale Rd, Austin, TX 78721'},
   ]
-  // const placeIds = [
-  //   'ChIJPXBW86a1RIYRLHKKgjK4Nf0',
-  //   'ChIJba0zGqe1RIYRxXZrt1HYUy8',
-  //   'ChIJT2rMMjVLW4YR75-Nm2Xw9pE',
-  //   'ChIJ3xGz3NVLW4YRh14R2m6ItFY',
-  //   'ChIJV7Qp1jy3RIYRThfOaekUXn4',
-  //   'ChIJjXZz26S3RIYRWikXkKilWBM',
-  //   'ChIJbZNlfIBKW4YRDbSlExVETlQ',
-  //   'ChIJ46yo1pbJRIYR6IsIGmKyat8',
-  //   'ChIJHcmXZBbNRIYRBjw7odKk1RE',
-  //   'ChIJU1B9-bq3RIYRDTvbVJ2alxk',
-  //   'ChIJC4wKqAK1RIYR0dxyI3A9wtE',
-  //   'ChIJF-srX6a1RIYR4sPOhIuCleg',
-  //   'ChIJWzrzburLRIYR5M5XUuslO6U',
-  //   'ChIJq4sFNKe1RIYRuMxP-mYQyps',
-  //   'ChIJ18R8S1KxRIYRUadsdsL4rQU',
-  //   'ChIJB1_oUG22RIYRDKyqXG1oHeA'
-  // ];
 
   // Function to create a marker for each Place ID
   placeIds.forEach(placeId => {
@@ -194,7 +174,6 @@ function initMap() {
   })
     .catch(error => {
       console.error('Error loading GeoJSON:', error);
-      // Handle the error as needed
   });
 
 
@@ -226,24 +205,25 @@ function initMap() {
   });
 
   // Fetch heatmap data from your server
-  fetchHeatmapData().then(data => {
+  fetchReport().then(data => {
     // Update heatmap data array
     heatmapData = data;
     // Set heatmap data
     heatmap.setData(heatmapData);
   });
 
-  function fetchHeatmapData() {
-    return fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/debris/heatmap')
+  function fetchReport() {
+    return fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/reports/latest')
       .then(response => response.json())
       .then(data => {
         // Check if "debrisHeatmap" array exists in the response
-        if (!data.debrisHeatmap) {
+        const debrisHeatmap = data["DEBRIS_REPORT"]["heatmap"];
+        if (!debrisHeatmap) {
           throw new Error('Invalid response format: debrisHeatmap array not found');
         }
 
         // Extract latitude, longitude, and weight from each data point
-        return data.debrisHeatmap.map(point => ({
+        return debrisHeatmap.map(point => ({
           location: new google.maps.LatLng(point.lat, point.lng),
           weight: point.weight
         }));
@@ -420,166 +400,46 @@ function initMap() {
       });
   }
 
-  function generateUUID() {
-    var d = new Date().getTime(); //Timestamp
-    var d2 = (performance && performance.now && (performance.now()*1000)) || 0; //Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16; //random number between 0 and 16
-        if(d > 0){ //Use timestamp until depleted
-            r = (d + r)%16 | 0;
-            d = Math.floor(d/16);
-        } else { //Use microseconds since page-load if supported
-            r = (d2 + r)%16 | 0;
-            d2 = Math.floor(d2/16);
-        }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-  }
-
   function showThankYouModal() {
-    // Create the modal container
-    var modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.left = '0';
-    modal.style.top = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0,0,0,0.4)';
-    modal.style.display = 'flex';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-    modal.style.zIndex = '1000';
+      // Create the modal container
+      var modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.left = '0';
+      modal.style.top = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.backgroundColor = 'rgba(0,0,0,0.4)';
+      modal.style.display = 'flex';
+      modal.style.justifyContent = 'center';
+      modal.style.alignItems = 'center';
+      modal.style.zIndex = '1000';
 
-    // Create the modal content
-    var modalContent = document.createElement('div');
-    modalContent.style.backgroundColor = '#fff';
-    modalContent.style.padding = '20px';
-    modalContent.style.borderRadius = '5px';
-    modalContent.style.textAlign = 'center';
+      // Create the modal content
+      var modalContent = document.createElement('div');
+      modalContent.style.backgroundColor = '#fff';
+      modalContent.style.padding = '20px';
+      modalContent.style.borderRadius = '5px';
+      modalContent.style.textAlign = 'center';
 
-    // Add text to the modal
-    var text = document.createElement('p');
-    text.textContent = 'Thank you for submitting the polygon!';
-    modalContent.appendChild(text);
+      // Add text to the modal
+      var text = document.createElement('p');
+      text.textContent = 'Thank you for submitting the polygon!';
+      modalContent.appendChild(text);
 
-    // Close button
-    var closeButton = document.createElement('button');
-    closeButton.textContent = 'Close';
-    closeButton.onclick = function() {
-      modal.style.display = 'none';
-      modal.remove();
-    };
-    modalContent.appendChild(closeButton);
+      // Close button
+      var closeButton = document.createElement('button');
+      closeButton.textContent = 'Close';
+      closeButton.onclick = function() {
+        modal.style.display = 'none';
+        modal.remove();
+      };
+      modalContent.appendChild(closeButton);
 
-    // Append modal content to modal
-    modal.appendChild(modalContent);
+      // Append modal content to modal
+      modal.appendChild(modalContent);
 
-    // Append modal to the body
-    document.body.appendChild(modal);
-  }
-}
-
-
-// CoT Functions
-function createCotPoint(latitude, longitude, altitude, circularError, heightError) {
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString('<point></point>', 'text/xml');
-  let point = xmlDoc.documentElement;
-  point.setAttribute('lat', latitude);
-  point.setAttribute('lon', longitude);
-  point.setAttribute('hae', altitude);
-  point.setAttribute('ce', circularError);
-  point.setAttribute('le', heightError);
-
-  return point;
-}
-
-function createCotColorFields(affiliation) {
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString('<colors></colors>', 'text/xml');
-  let colors = xmlDoc.documentElement;
-
-  let fillColor = xmlDoc.createElement('fillColor');
-  fillColor.setAttribute('value', affiliation);
-  colors.appendChild(fillColor);
-
-  let strokeColor = xmlDoc.createElement('strokeColor');
-  strokeColor.setAttribute('value', affiliation);
-  colors.appendChild(strokeColor);
-
-  let strokeWeight = xmlDoc.createElement('strokeWeight');
-  strokeWeight.setAttribute('value', '4.0');
-  colors.appendChild(strokeWeight);
-
-  return Array.from(colors.children);
-}
-
-function createCotAtomMessage(uid, callsign, cotType, latitude, longitude, altitude, circularError, heightError, courseOverGround, speedOverGround, startTime, staleTime) {
-  let parser = new DOMParser();
-  let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
-  let root = xmlDoc.documentElement;
-  root.setAttribute('version', '2.0');
-  root.setAttribute('type', cotType);
-  root.setAttribute('uid', uid);
-  root.setAttribute('how', 'm-g');
-  root.setAttribute('time', startTime.toISOString());
-  root.setAttribute('start', startTime.toISOString());
-  root.setAttribute('stale', staleTime.toISOString());
-
-  let contact = xmlDoc.createElement('contact');
-  contact.setAttribute('callsign', callsign);
-
-  let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
-
-  let track = xmlDoc.createElement('track');
-  track.setAttribute('course', courseOverGround.toString());
-  track.setAttribute('speed', speedOverGround.toString());
-
-  let remarks = xmlDoc.createElement('remarks');
-
-  let detail = xmlDoc.createElement('detail');
-  detail.appendChild(contact);
-  detail.appendChild(track);
-  detail.appendChild(remarks);
-
-  root.appendChild(point);
-  root.appendChild(detail);
-
-  return root;
-}
-
-  function createCotPolygonMessage(uid, callsign, latitude, longitude, polygon, altitude, circularError, heightError, affiliation, startTime, staleTime) {
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString('<event></event>', 'text/xml');
-    let root = xmlDoc.documentElement;
-    root.setAttribute('version', '2.0');
-    root.setAttribute('type', 'u-d-f');
-    root.setAttribute('uid', uid);
-    root.setAttribute('how', 'm-g');
-    root.setAttribute('time', startTime.toISOString());
-    root.setAttribute('start', startTime.toISOString());
-    root.setAttribute('stale', staleTime.toISOString());
-
-    let point = createCotPoint(latitude, longitude, altitude, circularError, heightError);
-
-    let contact = xmlDoc.createElement('contact');
-    contact.setAttribute('callsign', callsign);
-
-    let colorFields = createCotColorFields(affiliation);
-
-    let detail = xmlDoc.createElement('detail');
-
-    polygon.forEach(coords => {
-        let link = xmlDoc.createElement('link');
-        link.setAttribute('point', `${coords[1]},${coords[0]},0`);
-        detail.appendChild(link);
-    });
-
-    colorFields.forEach(field => detail.appendChild(field));
-
-    root.appendChild(point);
-    root.appendChild(detail);
-
-    return root;
+      // Append modal to the body
+      document.body.appendChild(modal);
+    }
   }
 }
