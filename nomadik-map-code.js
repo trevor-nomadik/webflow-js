@@ -216,23 +216,48 @@ function initMap() {
     return fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/reports/latest')
       .then(response => response.json())
       .then(data => {
-        // Check if "debrisHeatmap" array exists in the response
         const debrisHeatmap = data["DEBRIS_REPORT"]["heatmap"];
-        if (!debrisHeatmap) {
-          throw new Error('Invalid response format: debrisHeatmap array not found');
-        }
+        const fireReports = data["ONGOING_FIRE_REPORT"]["features"];
 
-        // Extract latitude, longitude, and weight from each data point
-        return debrisHeatmap.map(point => ({
+        // Handle Debris Heatmap
+        const debrisHeatmapData = debrisHeatmap.map(point => ({
           location: new google.maps.LatLng(point.lat, point.lng),
           weight: point.weight
         }));
+
+        // Handle Fire Reports
+        fireReports.forEach(report => {
+          createFireReportMarker(report);
+        });
+
+        return debrisHeatmapData; // Return debris heatmap data for heatmap layer
       })
       .catch(error => {
-        console.error('Error fetching heatmap data:', error);
+        console.error('Error fetching report data:', error);
         return []; // Return empty array if there's an error
       });
   }
+
+  function createFireReportMarker(report) {
+    const coords = report.geometry.coordinates;
+    const fireReportLatLng = new google.maps.LatLng(coords[1], coords[0]); // Note: GeoJSON coordinates are [lng, lat]
+    
+    const marker = new google.maps.Marker({
+      map: map,
+      position: fireReportLatLng,
+      title: report.properties.description,
+      icon: {
+        url: 'fire_dept.png', // URL to your custom fire icon
+        scaledSize: new google.maps.Size(50, 50), // Size of the icon
+      }
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      resourceWindow.setContent('<div><strong>' + report.properties.description + '</strong><br>' +
+      'Reported at: ' + report.properties.utc_last_reported + '</div>');
+      resourceWindow.open(map, this);
+    });
+}
   
    // Set style based on feature properties
   map.data.setStyle(function(feature) {
