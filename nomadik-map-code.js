@@ -253,8 +253,7 @@ function initMap() {
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-      resourceWindow.setContent('<div><strong>' + report.properties.description + '</strong><br>' +
-      'Reported at: ' + report.properties.local + '</div>');
+      resourceWindow.setContent('<div><strong>' + report.properties.description + '</strong><br>');
       resourceWindow.open(map, this);
       resourceWindowOpened = true;
     });
