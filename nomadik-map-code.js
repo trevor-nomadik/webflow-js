@@ -248,7 +248,7 @@ function initMap() {
       title: report.properties.description,
       icon: {
         url: 'https://trevor-nomadik.github.io/webflow-js/fire_dept.png',
-        scaledSize: new google.maps.Size(50, 50), // Size of the icon
+        scaledSize: new google.maps.Size(25, 25), // Size of the icon
       }
     });
 
