@@ -256,6 +256,7 @@ function initMap() {
       resourceWindow.setContent('<div><strong>' + report.properties.description + '</strong><br>' +
       'Reported at: ' + report.properties.utc_last_reported + '</div>');
       resourceWindow.open(map, this);
+      resourceWindowOpened = true;
     });
 }
   
