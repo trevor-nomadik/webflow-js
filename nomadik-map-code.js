@@ -247,7 +247,7 @@ function initMap() {
       position: fireReportLatLng,
       title: report.properties.description,
       icon: {
-        url: '(https://trevor-nomadik.github.io/webflow-js/fire_dept.png',
+        url: 'https://trevor-nomadik.github.io/webflow-js/fire_dept.png',
         scaledSize: new google.maps.Size(12, 12), // Size of the icon
       }
     });
