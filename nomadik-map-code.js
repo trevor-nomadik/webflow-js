@@ -254,7 +254,7 @@ function initMap() {
 
     google.maps.event.addListener(marker, 'click', function() {
       resourceWindow.setContent('<div><strong>' + report.properties.description + '</strong><br>' +
-      'Reported at: ' + report.properties.utc_last_reported + '</div>');
+      'Reported at: ' + report.properties.local + '</div>');
       resourceWindow.open(map, this);
       resourceWindowOpened = true;
     });
