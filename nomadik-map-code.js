@@ -247,8 +247,8 @@ function initMap() {
       position: fireReportLatLng,
       title: report.properties.description,
       icon: {
-        url: 'fire_dept.png', // URL to your custom fire icon
-        scaledSize: new google.maps.Size(50, 50), // Size of the icon
+        url: '(https://trevor-nomadik.github.io/webflow-js/fire_dept.png',
+        scaledSize: new google.maps.Size(12, 12), // Size of the icon
       }
     });
 
