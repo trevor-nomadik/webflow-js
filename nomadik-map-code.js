@@ -132,25 +132,6 @@ function initMap() {
     map: map
   });
 
-  // Empty the polygonList before adding search results
-  function clearPolygonList() {
-    while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
-      polygonList.removeChild(polygonList.lastChild);
-    }
-  }
-
-  // Function to populate sidebar with polygon names
-  function populatePolygonList(features) {
-    clearPolygonList(); // Clear existing list items before repopulating
-    features.forEach(feature => {
-      const listItem = document.createElement('li');
-      listItem.textContent = feature.properties.name;
-      listItem.style.cursor = 'pointer';
-      listItem.onclick = function() { zoomToFeature(feature, map); };
-      polygonList.appendChild(listItem);
-    });
-  }
-
   // Fetch heatmap data from your server
   fetchReport().then(data => {
     // Update heatmap data array
@@ -181,6 +162,25 @@ function initMap() {
         });
     
         populatePolygonList(polygons); // Initial population of the list
+
+         // Empty the polygonList before adding search results
+        function clearPolygonList() {
+          while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
+            polygonList.removeChild(polygonList.lastChild);
+          }
+        }
+
+        // Function to populate sidebar with polygon names
+        function populatePolygonList(features) {
+          clearPolygonList(); // Clear existing list items before repopulating
+          features.forEach(feature => {
+            const listItem = document.createElement('li');
+            listItem.textContent = feature.properties.name;
+            listItem.style.cursor = 'pointer';
+            listItem.onclick = function() { zoomToFeature(feature, map); };
+            polygonList.appendChild(listItem);
+          });
+        }
     
         // Implement search functionality
         searchInput.addEventListener('input', function() {
