@@ -123,6 +123,74 @@ function initMap() {
   searchInput.style.boxSizing = 'border-box';
   polygonList.insertBefore(searchInput, polygonList.firstChild);
 
+  fetch(
+    'https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/camps/polygons',
+    {
+      method: 'GET',
+      headers: {
+        'Origin': 'https://www.nomadik.ai',
+        'Accept': 'application/json',
+        'Content-Type': 'application/geo+json'
+      }
+    })
+    .then(response => response.json())
+    .then(content => {
+      // Add the GeoJSON data to the map.data layer
+      map.data.addGeoJson(content);
+  
+      // Empty the polygonList before adding search results
+      function clearPolygonList() {
+        while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
+          polygonList.removeChild(polygonList.lastChild);
+        }
+      }
+  
+      // Function to populate sidebar with polygon names
+      function populatePolygonList(features) {
+        clearPolygonList(); // Clear existing list items before repopulating
+        features.forEach(feature => {
+          const listItem = document.createElement('li');
+          listItem.textContent = feature.properties.name;
+          listItem.style.cursor = 'pointer';
+          listItem.onclick = function() { zoomToFeature(feature, map); };
+          polygonList.appendChild(listItem);
+        });
+      }
+  
+      populatePolygonList(content.features); // Initial population of the list
+  
+      // Implement search functionality
+      searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredFeatures = content.features.filter(feature => 
+          feature.properties.name.toLowerCase().includes(searchTerm)
+        );
+        populatePolygonList(filteredFeatures);
+      });
+  })
+    .catch(error => {
+      console.error('Error loading GeoJSON:', error);
+  });
+
+
+  function zoomToFeature(feature, map) {
+    const bounds = new google.maps.LatLngBounds();
+    const geometry = feature.geometry;
+    if (geometry.type === 'Polygon') {
+        geometry.coordinates[0].forEach(coord => {
+            bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+        });
+    } else if (geometry.type === 'MultiPolygon') {
+        // For MultiPolygon, iterate through each polygon
+        geometry.coordinates.forEach(polygon => {
+            polygon[0].forEach(coord => {
+                bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
+            });
+        });
+    }
+    map.fitBounds(bounds); // Zooms the map to the bounds
+  }
+
   // Create a heatmap data array
   var heatmapData = [];
 
@@ -131,25 +199,6 @@ function initMap() {
     data: heatmapData,
     map: map
   });
-
-  // Empty the polygonList before adding search results
-  function clearPolygonList() {
-    while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
-      polygonList.removeChild(polygonList.lastChild);
-    }
-  }
-
-  // Function to populate sidebar with polygon names
-  function populatePolygonList(features) {
-    clearPolygonList(); // Clear existing list items before repopulating
-    features.forEach(feature => {
-      const listItem = document.createElement('li');
-      listItem.textContent = feature.properties.name;
-      listItem.style.cursor = 'pointer';
-      listItem.onclick = function() { zoomToFeature(feature, map); };
-      polygonList.appendChild(listItem);
-    });
-  }
 
   // Fetch heatmap data from your server
   fetchReport().then(data => {
@@ -165,9 +214,6 @@ function initMap() {
       .then(data => {
         const debrisHeatmap = data["DEBRIS_REPORT"]["heatmap"];
         const fireReports = data["ONGOING_FIRE_REPORT"]["features"];
-        const polygons = data["ENCAMPMENT_REPORT"]["features"]
-
-        map.data.addGeoJson(polygons);
 
         // Handle Debris Heatmap
         const debrisHeatmapData = debrisHeatmap.map(point => ({
@@ -179,17 +225,8 @@ function initMap() {
         fireReports.forEach(report => {
           createFireReportMarker(report);
         });
-    
-        populatePolygonList(content.features); // Initial population of the list
-    
-        // Implement search functionality
-        searchInput.addEventListener('input', function() {
-          const searchTerm = searchInput.value.toLowerCase();
-          const filteredFeatures = content.features.filter(feature => 
-            feature.properties.name.toLowerCase().includes(searchTerm)
-          );
-          populatePolygonList(filteredFeatures);
-        });
+
+        return debrisHeatmapData; // Return debris heatmap data for heatmap layer
       })
       .catch(error => {
         console.error('Error fetching report data:', error);
@@ -216,25 +253,7 @@ function initMap() {
       resourceWindow.open(map, this);
       resourceWindowOpened = true;
     });
-  }
-
-  function zoomToFeature(feature, map) {
-    const bounds = new google.maps.LatLngBounds();
-    const geometry = feature.geometry;
-    if (geometry.type === 'Polygon') {
-        geometry.coordinates[0].forEach(coord => {
-            bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
-        });
-    } else if (geometry.type === 'MultiPolygon') {
-        // For MultiPolygon, iterate through each polygon
-        geometry.coordinates.forEach(polygon => {
-            polygon[0].forEach(coord => {
-                bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
-            });
-        });
-    }
-    map.fitBounds(bounds); // Zooms the map to the bounds
-  }
+}
   
    // Set style based on feature properties
   map.data.setStyle(function(feature) {
