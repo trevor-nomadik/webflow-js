@@ -161,7 +161,7 @@ function initMap() {
           createFireReportMarker(report);
         });
     
-        populatePolygonList(polygons); // Initial population of the list
+        populatePolygonList(polygons.features); // Initial population of the list
 
          // Empty the polygonList before adding search results
         function clearPolygonList() {
