@@ -180,12 +180,12 @@ function initMap() {
           createFireReportMarker(report);
         });
     
-        populatePolygonList(content.features); // Initial population of the list
+        populatePolygonList(polygons); // Initial population of the list
     
         // Implement search functionality
         searchInput.addEventListener('input', function() {
           const searchTerm = searchInput.value.toLowerCase();
-          const filteredFeatures = content.features.filter(feature => 
+          const filteredFeatures = polygons.filter(feature => 
             feature.properties.name.toLowerCase().includes(searchTerm)
           );
           populatePolygonList(filteredFeatures);
