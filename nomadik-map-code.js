@@ -137,7 +137,7 @@ function initMap() {
     while (polygonList.firstChild && polygonList.childElementCount > 1) { // Keep the search input
       polygonList.removeChild(polygonList.lastChild);
     }
-  }Z
+  }
 
   // Function to populate sidebar with polygon names
   function populatePolygonList(features) {
