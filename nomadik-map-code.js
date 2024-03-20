@@ -190,6 +190,8 @@ function initMap() {
           );
           populatePolygonList(filteredFeatures);
         });
+
+        return debrisHeatmapData;
       })
       .catch(error => {
         console.error('Error fetching report data:', error);
