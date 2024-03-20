@@ -28,12 +28,8 @@ function initMap() {
       position: {lat: placeId.lat, lng: placeId.lng},
       title: placeId.title,
       icon: {
-        path: google.maps.SymbolPath.CIRCLE, 
-        scale: 5, 
-        strokeColor: 'green',
-        fillColor: 'green',
-        fillOpacity: 1, 
-        strokeWeight: 2 
+        url: 'https://trevor-nomadik.github.io/webflow-js/resource.png',
+        scaledSize: new google.maps.Size(25, 25), // Size of the icon
       }
     });
 
