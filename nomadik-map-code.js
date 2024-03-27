@@ -62,7 +62,7 @@ function initMap() {
     {lat: 30.27863040901693, lng: -97.6869438054589, title: 'Hungry Hill Foundation', info: 'Address: 1189 Springdale Rd, Austin, TX 78721'},
   ]
 
-  const eventIDs = [{lat: 30.25962444640977, lng: -97.70933145235303, title: 'We Can Now Outreach', info: '12 pm: water, food, hygeine, clothes', day: 6, hour: 12}]
+  const eventIDs = [{lat: 30.25962444640977, lng: -97.70933145235303, title: 'We Can Now Outreach', info: '12 pm: water, food, hygeine, clothes', day: 2, hour: 12}]
 
   // Get the current date
   var currentDate = new Date();
