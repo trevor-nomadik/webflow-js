@@ -42,7 +42,7 @@ function initMap() {
   }
 
   // Resource markers
-  const places = placeIds = [
+  const placeIds = [
     {lat: 30.26774146155133, lng: -97.73753706227464, title: 'Austin Resource Center for the Homeless (ARCH)', info: 'Address: 500 E 7th St, Austin, TX 78701'},
     {lat: 30.268497261509022, lng: -97.73946040980792, title: 'Trinity Center Austin', info: 'Address: 304 E 7th St, Austin, TX 78701'},
     {lat: 30.26849667265927, lng: -97.73947541693146, title: 'Texas Homeless Network', info: 'Address: 3000 S I-35 Frontage Rd Suite 100, Austin, TX 78704'},
@@ -61,6 +61,19 @@ function initMap() {
     {lat: 30.20603224134893, lng: -97.69028333172862, title: 'Austin VA', info: 'Address: 7600 Metropolis Dr Building 5, Austin, TX 78744'},
     {lat: 30.27863040901693, lng: -97.6869438054589, title: 'Hungry Hill Foundation', info: 'Address: 1189 Springdale Rd, Austin, TX 78721'},
   ]
+
+  const eventIDs = [{lat: 30.25962444640977, lng: -97.70933145235303, title: 'We Can Now Outreach', info: '12 pm: water, food, hygeine, clothes', day: 6, hour: 12}]
+
+  // Get the current date
+  var currentDate = new Date();
+  // Get the current day of the week as a number (0-6)
+  var currentDay = currentDate.getDay();
+
+  eventIDs.forEach(event => {
+    if (event.day === currentDay) {
+      createMarkerForPlace(event);
+    }
+  });
 
   // Function to create a marker for each Place ID
   placeIds.forEach(placeId => {
