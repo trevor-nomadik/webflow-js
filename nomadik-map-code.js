@@ -68,6 +68,7 @@ function initMap() {
   var currentDate = new Date();
   // Get the current day of the week as a number (0-6)
   var currentDay = currentDate.getDay();
+  console.log(currentDay);
 
   eventIDs.forEach(event => {
     if (event.day === currentDay) {
