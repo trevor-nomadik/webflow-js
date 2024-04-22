@@ -320,8 +320,19 @@ function initMap() {
         population = "Unknown";
       }
 
+      // Handle council and police district information
+      var cityCouncilDistrict = event.feature.getProperty('council-district');
+      var apdDistrict = event.feature.getProperty('police-district');
+
+      // Convert arrays to readable string or show 'None' if empty
+      cityCouncilDistrict = cityCouncilDistrict.length > 0 ? cityCouncilDistrict.join(", ") : "None";
+      apdDistrict = apdDistrict.length > 0 ? apdDistrict.join(", ") : "None";
+
+
       contentString = '<div><strong>' + name + '</strong></div>' +
                       '<div>Population Estimate: ' + population + '</div>' +
+                      '<div>City Council District(s): ' + cityCouncilDistrict + '</div>' +
+                      '<div>APD District(s): ' + apdDistrict + '</div>' +
                       '<div>Still here?</div>' +
                       '<button id="yesBtn">Yes</button>' +
                       '<button id="noBtn">No</button>';
