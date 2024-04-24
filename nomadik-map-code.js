@@ -13,6 +13,28 @@ function initMap() {
     ]
   });
 
+  // Define the topographic map layer
+  var topoMapType = new google.maps.ImageMapType({
+    getTileUrl: function(coord, zoom) {
+      return 'https://tile.opentopomap.org/' + zoom + '/' + coord.x + '/' + coord.y + '.png';
+    },
+    tileSize: new google.maps.Size(256, 256),
+    name: 'Topographic',
+    maxZoom: 17
+  });
+
+  // Add the topographic map layer to the map
+  map.mapTypes.set('topographic', topoMapType);
+
+  // Enable map type control to allow users to switch map types
+  map.setOptions({
+    mapTypeControl: true,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+      mapTypeIds: ['hybrid', 'topographic'] // Include your custom map type here
+    }
+  });
+
   // Initialize the Places service
   // var service = new google.maps.places.PlacesService(map);
   var resourceWindow = new google.maps.InfoWindow();
