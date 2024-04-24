@@ -117,7 +117,7 @@ function initMap() {
   pointSelectionButton.style.margin = '10px';
   pointSelectionButton.style.backgroundColor = 'transparent'; 
   // Add the button to the map
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(pointSelectionButton);
+  map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(pointSelectionButton);
 
   let isPointSelectionModeEnabled = false;
 
