@@ -337,6 +337,8 @@ function initMap() {
       var name = event.feature.getProperty('name');
 
       var properties = event.feature.getProperty('properties');
+      console.log(properties);
+      console.log(properties.inventory);
       var populationAVG = properties && properties.inventory ? properties.inventory.populationAVG : "Unknown";
 
       // Handle council and police district information
