@@ -349,7 +349,7 @@ function initMap() {
 
 
       contentString = '<div><strong>' + name + '</strong></div>' +
-                      '<div>Population Estimate: ' + population + '</div>' +
+                      '<div>Population Estimate: ' + populationAVG + '</div>' +
                       '<div>City Council District(s): ' + cityCouncilDistrict + '</div>' +
                       '<div>APD District(s): ' + apdDistrict + '</div>' +
                       '<div>Still here?</div>' +
