@@ -336,7 +336,7 @@ function initMap() {
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
 
-      var population = event.feature.getProperty('population');
+      var population = event.feature.getProperty('properties').inventory.populationAVG;
       // Check if population is not a number or undefined
       if (typeof population !== 'number' || isNaN(population)) {
         population = "Unknown";
