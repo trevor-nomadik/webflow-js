@@ -220,7 +220,7 @@ function initMap() {
         // Implement search functionality
         searchInput.addEventListener('input', function() {
           const searchTerm = searchInput.value.toLowerCase();
-          const filteredFeatures = polygons.filter(feature => 
+          const filteredFeatures = polygons.features.filter(feature => 
             feature.properties.name.toLowerCase().includes(searchTerm)
           );
           populatePolygonList(filteredFeatures);
@@ -335,16 +335,9 @@ function initMap() {
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
-      var population = event.feature.getProperty('properties');
 
-      // Safely accessing the inventory property
       var properties = event.feature.getProperty('properties');
-      var inventory = properties ? properties.inventory : null;
-      var population = inventory ? inventory.populationAVG : 'Unknown';
-      // Check if population is not a number or undefined
-      if (typeof population !== 'number' || isNaN(population)) {
-        population = "Unknown";
-      }
+      var populationAVG = properties && properties.inventory ? properties.inventory.populationAVG : "Unknown";
 
       // Handle council and police district information
       var cityCouncilDistrict = event.feature.getProperty('council-district');
