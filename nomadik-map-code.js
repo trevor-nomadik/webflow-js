@@ -332,14 +332,18 @@ function initMap() {
 
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
+      console.log(event.feature.getProperty('properties')); 
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
 
       var properties = event.feature.getProperty('properties');
-      console.log(properties);
-      console.log(properties.inventory);
-      var populationAVG = properties && properties.inventory ? properties.inventory.populationAVG : "Unknown";
+      var populationAVG = "Unknown"; // Default to unknown
+
+      // Check if properties and inventory exist
+      if (properties && properties.inventory) {
+          populationAVG = properties.inventory.populationAVG;
+      }
 
       // Handle council and police district information
       var cityCouncilDistrict = event.feature.getProperty('council-district');
