@@ -335,8 +335,12 @@ function initMap() {
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
+      var population = event.feature.getProperty('properties');
 
-      var population = event.feature.getProperty('properties').inventory.populationAVG;
+      // Safely accessing the inventory property
+      var properties = event.feature.getProperty('properties');
+      var inventory = properties ? properties.inventory : null;
+      var population = inventory ? inventory.populationAVG : 'Unknown';
       // Check if population is not a number or undefined
       if (typeof population !== 'number' || isNaN(population)) {
         population = "Unknown";
