@@ -193,10 +193,10 @@ function initMap() {
         };
       
         // Update the text values
-        document.getElementById('total-camps').innerText = `Total Camps: (${polygons.features.length})`;
-        document.getElementById('greenbelt-camps').innerText = `Green Belt Camps: (${encampmentCounts.greenBeltCamps})`;
-        document.getElementById('park-camps').innerText = `Park Camps: (${encampmentCounts.parkCamps})`;
-        document.getElementById('camps-near-schools').innerText = `Camps Near Schools: (${encampmentCounts.campsNearSchools})`;
+        // document.getElementById('total-camps').innerText = `Total Camps: (${polygons.features.length})`;
+        // document.getElementById('greenbelt-camps').innerText = `Green Belt Camps: (${encampmentCounts.greenBeltCamps})`;
+        // document.getElementById('park-camps').innerText = `Park Camps: (${encampmentCounts.parkCamps})`;
+        // document.getElementById('camps-near-schools').innerText = `Camps Near Schools: (${encampmentCounts.campsNearSchools})`;
 
         // Handle Debris Heatmap
         const debrisHeatmapData = debrisHeatmap.map(point => ({
