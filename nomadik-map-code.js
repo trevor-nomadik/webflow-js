@@ -173,19 +173,18 @@ function initMap() {
     heatmapData = data;
     // Set heatmap data
     heatmap.setData(heatmapData);
+    const encampmentCounts = {
+      greenBeltCamps: 29, // 5/22
+      parkCamps: 18,
+      campsNearSchools: 22
+    };
+  
+    // Update the text values
+    document.getElementById('total-camps').innerText = `Total Camps: (${polygons.features.length})`;
+    document.getElementById('greenbelt-camps').innerText = `Green Belt Camps: (${encampmentCounts.greenBeltCamps})`;
+    document.getElementById('park-camps').innerText = `Park Camps: (${encampmentCounts.parkCamps})`;
+    document.getElementById('camps-near-schools').innerText = `Camps Near Schools: (${encampmentCounts.campsNearSchools})`;
   });
-
-  const encampmentCounts = {
-    greenBeltCamps: 29, // 5/22
-    parkCamps: 18,
-    campsNearSchools: 22
-  };
-
-  // Update the text values
-  document.getElementById('total-camps').innerText = `Total Camps: (${polygons.features.length})`;
-  document.getElementById('greenbelt-camps').innerText = `Green Belt Camps: (${encampmentCounts.greenBeltCamps})`;
-  document.getElementById('park-camps').innerText = `Park Camps: (${encampmentCounts.parkCamps})`;
-  document.getElementById('camps-near-schools').innerText = `Camps Near Schools: (${encampmentCounts.campsNearSchools})`;
 
 
   function fetchReport() {
