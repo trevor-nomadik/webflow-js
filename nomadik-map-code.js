@@ -384,47 +384,49 @@ function initMap() {
       // Attach event listeners to the buttons after a slight delay to ensure DOM elements are created
       google.maps.event.addListenerOnce(infoWindow, 'domready', function(){
         document.getElementById('yesBtn').addEventListener('click', function() {
-          var descriptionJson = JSON.stringify({
-              polygonName: name,
-              assessment: 'ENCAMPMENT',
-              type: 'PRESENCE',
-              response: true,
-          });
-  
-          var payload = JSON.stringify({
-              type: "polygon_observation",
-              location: {
-                  latitude_deg: clickedLat,
-                  longitude_deg: clickedLng
-              },
-              description: descriptionJson
-          });
-  
-          sendDataToServer(payload, clickedLat, clickedLng);
-          infoWindow.close();
-      });
-
-      document.getElementById('noBtn').addEventListener('click', function() {
-        var descriptionJson = JSON.stringify({
-            polygonName: name,
-            assessment: 'ENCAMPMENT',
-            type: 'PRESENCE',
-            response: false,
+            var descriptionJson = JSON.stringify({
+                polygonName: name,
+                assessment: 'ENCAMPMENT',
+                type: 'PRESENCE',
+                response: true,
+                status: 'STATUS_HERE'  // Replace 'STATUS_HERE' with the actual status value
+            });
+    
+            var payload = JSON.stringify({
+                type: "polygon_observation",
+                location: {
+                    latitude_deg: clickedLat,
+                    longitude_deg: clickedLng
+                },
+                description: descriptionJson
+            });
+    
+            sendDataToServer(payload, clickedLat, clickedLng);
+            infoWindow.close();
         });
-
-        var payload = JSON.stringify({
-            type: "polygon_observation",
-            location: {
-                latitude_deg: clickedLat,
-                longitude_deg: clickedLng
-            },
-            description: descriptionJson
+    
+        document.getElementById('noBtn').addEventListener('click', function() {
+            var descriptionJson = JSON.stringify({
+                polygonName: name,
+                assessment: 'ENCAMPMENT',
+                type: 'PRESENCE',
+                response: false,
+                status: 'STATUS_HERE'  // Replace 'STATUS_HERE' with the actual status value
+            });
+    
+            var payload = JSON.stringify({
+                type: "polygon_observation",
+                location: {
+                    latitude_deg: clickedLat,
+                    longitude_deg: clickedLng
+                },
+                description: descriptionJson
+            });
+    
+            sendDataToServer(payload, clickedLat, clickedLng);
+            infoWindow.close();
         });
-
-        sendDataToServer(payload, clickedLat, clickedLng);
-        infoWindow.close();
     });
-  });
   
   // Add a click event listener to the map
   google.maps.event.addListener(map, 'click', function() {
