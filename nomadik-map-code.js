@@ -1,7 +1,27 @@
 function initMap() {
+  // Function to get URL parameters
+  function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+  }
+
+  // Extract parameters from URL
+  var paramLat = parseFloat(getUrlParameter('lat'));
+  var paramLng = parseFloat(getUrlParameter('lng'));
+  var paramZoom = parseInt(getUrlParameter('zoom'), 10);
+
+  // Set default map center and zoom if URL parameters are not provided
+  var defaultCenter = {lat: 30.266666, lng: -97.733330};
+  var defaultZoom = 12;
+
+  var mapCenter = (paramLat && paramLng) ? {lat: paramLat, lng: paramLng} : defaultCenter;
+  var mapZoom = paramZoom || defaultZoom;
+
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: {lat: 30.266666, lng: -97.733330} ,
+    zoom: mapZoom,
+    center: mapCenter,
     mapTypeId: 'hybrid',
     mapTypeControl: false,
     streetViewControl: false,
@@ -42,9 +62,6 @@ function initMap() {
 
   // Function to create a marker for a place
   function createMarkerForPlace(placeId) {
-    //service.getDetails({placeId: placeId}, function(place, status) {
-      //if (status === google.maps.places.PlacesServiceStatus.OK) {
-      // Create a marker for the place
     var marker = new google.maps.Marker({
       map: map,
       position: {lat: placeId.lat, lng: placeId.lng},
