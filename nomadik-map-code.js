@@ -418,10 +418,13 @@ function initMap() {
       "HEROIN": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png'
     };
   
-    var combinedItems = (inventory.materialsReported || []).concat(inventory.paraphernaliaReported || []);
+    var combinedItems = [];
+    if (inventory) {
+      combinedItems = (inventory.materialsReported || []).concat(inventory.paraphernaliaReported || []);
+    }
     var toxicItems = ["HEROIN", "METH", "FENTANYL"];
     var iconsHtml = '';
-  
+    
     combinedItems.forEach(function(item) {
       if (toxicItems.includes(item)) {
         iconsHtml += `
