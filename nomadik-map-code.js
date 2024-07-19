@@ -128,7 +128,7 @@ function initMap() {
     });
   }
 
-  map.addListener('zoom_changed', updateMarkerOpacity);
+  map.addListener('zoom_changed', updateMarkerVisibility);
   updateMarkerVisibility();
 
   // Create a button and set its properties
