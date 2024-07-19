@@ -212,13 +212,15 @@ function initMap() {
         const debrisHeatmap = data["DEBRIS_REPORT"]["heatmap"];
         const fireReports = data["ONGOING_FIRE_REPORT"]["features"];
         const polygons = data["ENCAMPMENT_REPORT"];
+        const trailMapData = data["TRAILMAP_REPORT"]["features"];
+        addTrailsToMap(trailMapData); 
 
         map.data.addGeoJson(polygons);
 
         const encampmentCounts = {
-          greenBeltCamps: 29, // 5/22
+          greenBeltCamps: 31, // 5/22
           parkCamps: 18,
-          campsNearSchools: 22
+          campsNearSchools: 24
         };
       
         // Update the text values
@@ -274,6 +276,20 @@ function initMap() {
         console.error('Error fetching report data:', error);
         return []; // Return empty array if there's an error
       });
+  }
+
+  function addTrailsToMap(trailMapData) {
+    trailMapData.forEach(trail => {
+      const trailCoordinates = trail.geometry.coordinates.map(coord => ({ lat: coord[1], lng: coord[0] }));
+      const trailPolyline = new google.maps.Polyline({
+        path: trailCoordinates,
+        geodesic: true,
+        strokeColor: trail.properties.stroke,
+        strokeOpacity: 1.0,
+        strokeWeight: 4
+      });
+      trailPolyline.setMap(map);
+    });
   }
 
   function createFireReportMarker(report) {
