@@ -393,7 +393,6 @@ function initMap() {
 
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
-      console.log(event.feature.getProperty('inventory')); 
   		infoWindowOpened = true;
       // Get the name property of the clicked polygon
       var name = event.feature.getProperty('name');
