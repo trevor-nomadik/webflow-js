@@ -427,13 +427,13 @@ function initMap() {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
             <img src="https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
-            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;">Toxic substances reported: ${item}</span>
+          <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;">Toxic substances reported: ${item}</span>
           </div>`;
       } else if (hazardIcons[item]) {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
             <img src="${hazardIcons[item]}" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
-            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;">Hazard reported: ${item}</span>
+          <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;">Hazard reported: ${item}</span>
           </div>`;
       }
     });
@@ -443,15 +443,12 @@ function initMap() {
         <strong>${name}</strong>
       </div>
       <div>
-        <img src="path_to_population_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
         Population Estimate: ${populationAVG}
       </div>
       <div>
-        <img src="path_to_council_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
         City Council District(s): ${cityCouncilDistrict}
       </div>
       <div>
-        <img src="path_to_police_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
         APD District(s): ${apdDistrict}
       </div>
       <div>
