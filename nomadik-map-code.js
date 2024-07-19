@@ -494,7 +494,23 @@ function initMap() {
       var iconContainers = document.getElementsByClassName('icon-container');
       for (var i = 0; i < iconContainers.length; i++) {
         iconContainers[i].addEventListener('mouseover', function() {
-          this.querySelector('.tooltip-text').style.visibility = 'visible';
+          var tooltip = this.querySelector('.tooltip-text');
+          var rect = this.getBoundingClientRect();
+          if (rect.left + tooltip.offsetWidth > window.innerWidth) {
+            tooltip.style.left = 'auto';
+            tooltip.style.right = '0';
+          } else {
+            tooltip.style.left = '50%';
+            tooltip.style.right = 'auto';
+          }
+          if (rect.top - tooltip.offsetHeight < 0) {
+            tooltip.style.bottom = 'auto';
+            tooltip.style.top = '125%';
+          } else {
+            tooltip.style.bottom = '125%';
+            tooltip.style.top = 'auto';
+          }
+          tooltip.style.visibility = 'visible';
         });
         iconContainers[i].addEventListener('mouseout', function() {
           this.querySelector('.tooltip-text').style.visibility = 'hidden';
