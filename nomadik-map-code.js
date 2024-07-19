@@ -59,6 +59,7 @@ function initMap() {
   // var service = new google.maps.places.PlacesService(map);
   var resourceWindow = new google.maps.InfoWindow();
   var resourceWindowOpened = false;
+  var markers = [];
 
   // Function to create a marker for a place
   function createMarkerForPlace(placeId) {
@@ -71,6 +72,8 @@ function initMap() {
         scaledSize: new google.maps.Size(25, 25), // Size of the icon
       }
     });
+
+    markers.push(marker);
 
     google.maps.event.addListener(marker, 'click', function() {
       resourceWindowOpened = true;
