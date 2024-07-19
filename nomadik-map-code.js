@@ -429,13 +429,13 @@ function initMap() {
       if (toxicItems.includes(item)) {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
-            <img src="https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+            <img src="https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png" style="width:24px;height:24px;vertical-align:middle;margin-right:5px;">
             <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;bottom:125%;left:50%;transform:translateX(-50%);">Toxic substances reported: ${item}</span>
           </div>`;
       } else if (hazardIcons[item]) {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
-            <img src="${hazardIcons[item]}" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+            <img src="${hazardIcons[item]}" style="width:24px;height:24px;vertical-align:middle;margin-right:5px;">
             <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;bottom:125%;left:50%;transform:translateX(-50%);">Hazard reported: ${item}</span>
           </div>`;
       }
