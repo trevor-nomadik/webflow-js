@@ -410,12 +410,12 @@ function initMap() {
   
     // Hazard icons mapping
     var hazardIcons = {
-      "PROPANE": 'assets/hazard_pictograms/explosive.png',
-      "GASOLINE": 'assets/hazard_pictograms/flammable.png',
-      "NEEDLES": 'assets/hazard_pictograms/harmful.png',
-      "CHEMICAL WASTE": 'assets/hazard_pictograms/corrosive.png',
-      "HUMAN WASTE": 'assets/hazard_pictograms/health_hazard.png',
-      "HEROIN": 'assets/hazard_pictograms/toxic.png'
+      "PROPANE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/explosive.png',
+      "GASOLINE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/flammable.png',
+      "NEEDLES": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/harmful.png',
+      "CHEMICAL WASTE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/corrosive.png',
+      "HUMAN WASTE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/health_hazard.png',
+      "HEROIN": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png'
     };
   
     var combinedItems = (inventory.materialsReported || []).concat(inventory.paraphernaliaReported || []);
@@ -426,7 +426,7 @@ function initMap() {
       if (toxicItems.includes(item)) {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
-            <img src="assets/map_icons/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+            <img src="https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
             <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;">Toxic substances reported: ${item}</span>
           </div>`;
       } else if (hazardIcons[item]) {
