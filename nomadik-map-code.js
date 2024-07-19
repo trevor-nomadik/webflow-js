@@ -120,15 +120,16 @@ function initMap() {
   });
 
   // Update marker opacity based on zoom level
-  function updateMarkerOpacity() {
+  function updateMarkerVisibility() {
     var zoom = map.getZoom();
-    var opacity = Math.max(0, Math.min(1, 1 - ((zoom - 12) / 6))); // Adjust as needed
+    var visible = zoom < 15;
     markers.forEach(marker => {
-      marker.setOpacity(opacity);
+      marker.setVisible(visible);
     });
   }
 
   map.addListener('zoom_changed', updateMarkerOpacity);
+  updateMarkerVisibility();
 
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
