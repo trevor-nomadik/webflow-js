@@ -119,6 +119,17 @@ function initMap() {
     createMarkerForPlace(placeId);
   });
 
+  // Update marker opacity based on zoom level
+  function updateMarkerOpacity() {
+    var zoom = map.getZoom();
+    var opacity = Math.max(0, Math.min(1, 1 - ((zoom - 12) / 6))); // Adjust as needed
+    markers.forEach(marker => {
+      marker.setOpacity(opacity);
+    });
+  }
+
+  map.addListener('zoom_changed', updateMarkerOpacity);
+
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
   pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
