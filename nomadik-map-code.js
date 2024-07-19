@@ -68,7 +68,7 @@ function initMap() {
       position: {lat: placeId.lat, lng: placeId.lng},
       title: placeId.title,
       icon: {
-        url: 'https://trevor-nomadik.github.io/webflow-js/resource.png',
+        url: 'https://trevor-nomadik.github.io/webflow-js/assets/resource.png',
         scaledSize: new google.maps.Size(25, 25), // Size of the icon
       }
     });
@@ -137,7 +137,7 @@ function initMap() {
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
   pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
-  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/point_button.png'; 
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/assets/point_button.png'; 
   pointSelectionButton.style.backgroundSize = 'contain';
   pointSelectionButton.style.backgroundRepeat = 'no-repeat';
   pointSelectionButton.style.backgroundPosition = 'center';
@@ -304,7 +304,7 @@ function initMap() {
       position: fireReportLatLng,
       title: report.properties.description,
       icon: {
-        url: 'https://trevor-nomadik.github.io/webflow-js/fire_dept.png',
+        url: 'https://trevor-nomadik.github.io/webflow-js/assets/fire_dept.png',
         scaledSize: new google.maps.Size(25, 25), // Size of the icon
       }
     });
@@ -393,61 +393,117 @@ function initMap() {
 
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
-  		infoWindowOpened = true;
-      // Get the name property of the clicked polygon
-      var name = event.feature.getProperty('name');
-
-      var inventory = event.feature.getProperty('inventory');
-      var populationAVG = inventory ? inventory.populationAVG : "Unknown";
-
-      // Handle council and police district information
-      var cityCouncilDistrict = event.feature.getProperty('council-district');
-      var apdDistrict = event.feature.getProperty('police-district');
-
-      // Convert arrays to readable string or show 'None' if empty
-      cityCouncilDistrict = cityCouncilDistrict.length > 0 ? cityCouncilDistrict.join(", ") : "None";
-      apdDistrict = apdDistrict.length > 0 ? apdDistrict.join(", ") : "None";
-
-
-      contentString = '<div><strong>' + name + '</strong></div>' +
-                      '<div>Population Estimate: ' + populationAVG + '</div>' +
-                      '<div>City Council District(s): ' + cityCouncilDistrict + '</div>' +
-                      '<div>APD District(s): ' + apdDistrict + '</div>' +
-                      '<div>Still here?</div>' +
-                      '<button id="yesBtn">Yes</button>' +
-                      '<button id="noBtn">No</button>';
-
-      // Set the content of the info window
-      infoWindow.setContent(contentString);
-
-      // Position the info window on the clicked location
-      infoWindow.setPosition(event.latLng);
-      var clickedLat = event.latLng.lat();
-      var clickedLng = event.latLng.lng();
-
-      // Open the info window
-      infoWindow.open(map);
-
-      // Attach event listeners to the buttons after a slight delay to ensure DOM elements are created
-      google.maps.event.addListenerOnce(infoWindow, 'domready', function(){
-          document.getElementById('yesBtn').addEventListener('click', function() {
-              var descriptionString = JSON.stringify({
-                polygonName: name,
-                response: true
-            });
-              sendDataToServer(descriptionString, clickedLat, clickedLng);
-              infoWindow.close();
-          });
-
-          document.getElementById('noBtn').addEventListener('click', function() {
-              var descriptionString = JSON.stringify({
-                polygonName: name,
-                response: false
-            });
-              sendDataToServer(descriptionString, clickedLat, clickedLng);
-              infoWindow.close();
-          });
+    infoWindowOpened = true;
+    // Get the name property of the clicked polygon
+    var name = event.feature.getProperty('name');
+  
+    var inventory = event.feature.getProperty('inventory');
+    var populationAVG = inventory ? inventory.populationAVG : "Unknown";
+  
+    // Handle council and police district information
+    var cityCouncilDistrict = event.feature.getProperty('council-district');
+    var apdDistrict = event.feature.getProperty('police-district');
+  
+    // Convert arrays to readable string or show 'None' if empty
+    cityCouncilDistrict = cityCouncilDistrict.length > 0 ? cityCouncilDistrict.join(", ") : "None";
+    apdDistrict = apdDistrict.length > 0 ? apdDistrict.join(", ") : "None";
+  
+    // Hazard icons mapping
+    var hazardIcons = {
+      "PROPANE": 'assets/hazard_pictograms/explosive.png',
+      "GASOLINE": 'assets/hazard_pictograms/flammable.png',
+      "NEEDLES": 'assets/hazard_pictograms/harmful.png',
+      "CHEMICAL WASTE": 'assets/hazard_pictograms/corrosive.png',
+      "HUMAN WASTE": 'assets/hazard_pictograms/health_hazard.png',
+      "HEROIN": 'assets/hazard_pictograms/toxic.png'
+    };
+  
+    var combinedItems = (inventory.materialsReported || []).concat(inventory.paraphernaliaReported || []);
+    var toxicItems = ["HEROIN", "METH", "FENTANYL"];
+    var iconsHtml = '';
+  
+    combinedItems.forEach(function(item) {
+      if (toxicItems.includes(item)) {
+        iconsHtml += `
+          <div class="icon-container" style="display:inline-block;position:relative;">
+            <img src="assets/map_icons/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;">Toxic substances reported: ${item}</span>
+          </div>`;
+      } else if (hazardIcons[item]) {
+        iconsHtml += `
+          <div class="icon-container" style="display:inline-block;position:relative;">
+            <img src="${hazardIcons[item]}" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;bottom:125%;left:50%;margin-left:-60px;">Hazard reported: ${item}</span>
+          </div>`;
+      }
+    });
+  
+    var contentString = `
+      <div>
+        <strong>${name}</strong>
+      </div>
+      <div>
+        <img src="path_to_population_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+        Population Estimate: ${populationAVG}
+      </div>
+      <div>
+        <img src="path_to_council_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+        City Council District(s): ${cityCouncilDistrict}
+      </div>
+      <div>
+        <img src="path_to_police_icon.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
+        APD District(s): ${apdDistrict}
+      </div>
+      <div>
+        ${iconsHtml}
+      </div>
+      <div>Still here?</div>
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    `;
+  
+    // Set the content of the info window
+    infoWindow.setContent(contentString);
+  
+    // Position the info window on the clicked location
+    infoWindow.setPosition(event.latLng);
+    var clickedLat = event.latLng.lat();
+    var clickedLng = event.latLng.lng();
+  
+    // Open the info window
+    infoWindow.open(map);
+  
+    // Attach event listeners to the buttons after a slight delay to ensure DOM elements are created
+    google.maps.event.addListenerOnce(infoWindow, 'domready', function() {
+      document.getElementById('yesBtn').addEventListener('click', function() {
+        var descriptionString = JSON.stringify({
+          polygonName: name,
+          response: true
+        });
+        sendDataToServer(descriptionString, clickedLat, clickedLng);
+        infoWindow.close();
       });
+  
+      document.getElementById('noBtn').addEventListener('click', function() {
+        var descriptionString = JSON.stringify({
+          polygonName: name,
+          response: false
+        });
+        sendDataToServer(descriptionString, clickedLat, clickedLng);
+        infoWindow.close();
+      });
+  
+      // Add event listeners for tooltips
+      var iconContainers = document.getElementsByClassName('icon-container');
+      for (var i = 0; i < iconContainers.length; i++) {
+        iconContainers[i].addEventListener('mouseover', function() {
+          this.querySelector('.tooltip-text').style.visibility = 'visible';
+        });
+        iconContainers[i].addEventListener('mouseout', function() {
+          this.querySelector('.tooltip-text').style.visibility = 'hidden';
+        });
+      }
+    });
   });
   
   // Add a click event listener to the map
