@@ -427,13 +427,13 @@ function initMap() {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
             <img src="https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/toxic.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
-          <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;">Toxic substances reported: ${item}</span>
+            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;bottom:125%;left:50%;transform:translateX(-50%);">Toxic substances reported: ${item}</span>
           </div>`;
       } else if (hazardIcons[item]) {
         iconsHtml += `
           <div class="icon-container" style="display:inline-block;position:relative;">
             <img src="${hazardIcons[item]}" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;">
-          <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;z-index:1;">Hazard reported: ${item}</span>
+            <span class="tooltip-text" style="visibility:hidden;width:120px;background-color:black;color:#fff;text-align:center;border-radius:5px;padding:5px;position:absolute;bottom:125%;left:50%;transform:translateX(-50%);">Hazard reported: ${item}</span>
           </div>`;
       }
     });
@@ -496,20 +496,6 @@ function initMap() {
         iconContainers[i].addEventListener('mouseover', function() {
           var tooltip = this.querySelector('.tooltip-text');
           var rect = this.getBoundingClientRect();
-          if (rect.left + tooltip.offsetWidth > window.innerWidth) {
-            tooltip.style.left = 'auto';
-            tooltip.style.right = '0';
-          } else {
-            tooltip.style.left = '50%';
-            tooltip.style.right = 'auto';
-          }
-          if (rect.top - tooltip.offsetHeight < 0) {
-            tooltip.style.bottom = 'auto';
-            tooltip.style.top = '125%';
-          } else {
-            tooltip.style.bottom = '125%';
-            tooltip.style.top = 'auto';
-          }
           tooltip.style.visibility = 'visible';
         });
         iconContainers[i].addEventListener('mouseout', function() {
