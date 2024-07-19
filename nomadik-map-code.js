@@ -500,6 +500,21 @@ function initMap() {
           var tooltip = this.querySelector('.tooltip-text');
           var rect = this.getBoundingClientRect();
           tooltip.style.visibility = 'visible';
+          tooltip.style.bottom = '125%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translateX(-50%)';
+
+          var infoWindowRect = document.querySelector('.gm-style-iw').getBoundingClientRect();
+
+          if (rect.left + tooltip.offsetWidth / 2 > infoWindowRect.right) {
+            tooltip.style.left = 'auto';
+            tooltip.style.right = '0';
+            tooltip.style.transform = 'translateX(0)';
+          } else if (rect.right - tooltip.offsetWidth / 2 < infoWindowRect.left) {
+            tooltip.style.left = '0';
+            tooltip.style.right = 'auto';
+            tooltip.style.transform = 'translateX(0)';
+          }
         });
         iconContainers[i].addEventListener('mouseout', function() {
           this.querySelector('.tooltip-text').style.visibility = 'hidden';
