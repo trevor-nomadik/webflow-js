@@ -394,21 +394,15 @@ function initMap() {
   // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
     infoWindowOpened = true;
-    // Get the name property of the clicked polygon
     var name = event.feature.getProperty('name');
-  
     var inventory = event.feature.getProperty('inventory');
     var populationAVG = inventory ? inventory.populationAVG : "Unknown";
-  
-    // Handle council and police district information
     var cityCouncilDistrict = event.feature.getProperty('council-district');
     var apdDistrict = event.feature.getProperty('police-district');
   
-    // Convert arrays to readable string or show 'None' if empty
     cityCouncilDistrict = cityCouncilDistrict.length > 0 ? cityCouncilDistrict.join(", ") : "None";
     apdDistrict = apdDistrict.length > 0 ? apdDistrict.join(", ") : "None";
   
-    // Hazard icons mapping
     var hazardIcons = {
       "PROPANE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/explosive.png',
       "GASOLINE": 'https://trevor-nomadik.github.io/webflow-js/assets/hazard_pictograms/flammable.png',
@@ -442,6 +436,10 @@ function initMap() {
     });
   
     var contentString = `
+    <div style="position:relative;">
+      <div style="position:absolute;top:0;left:0;">
+        <img src="https://img.icons8.com/ios-filled/50/000000/share.png" id="shareIcon" style="width:24px;height:24px;cursor:pointer;">
+      </div>
       <div>
         <strong>${name}</strong>
       </div>
@@ -460,20 +458,17 @@ function initMap() {
       <div>Still here?</div>
       <button id="yesBtn">Yes</button>
       <button id="noBtn">No</button>
-    `;
+    </div>
+  `;
   
-    // Set the content of the info window
     infoWindow.setContent(contentString);
   
-    // Position the info window on the clicked location
     infoWindow.setPosition(event.latLng);
     var clickedLat = event.latLng.lat();
     var clickedLng = event.latLng.lng();
   
-    // Open the info window
     infoWindow.open(map);
   
-    // Attach event listeners to the buttons after a slight delay to ensure DOM elements are created
     google.maps.event.addListenerOnce(infoWindow, 'domready', function() {
       document.getElementById('yesBtn').addEventListener('click', function() {
         var descriptionString = JSON.stringify({
@@ -492,8 +487,16 @@ function initMap() {
         sendDataToServer(descriptionString, clickedLat, clickedLng);
         infoWindow.close();
       });
+
+      document.getElementById('shareIcon').addEventListener('click', function() {
+        var shareUrl = `https://nomadik.ai/?lat=${clickedLat}&lng=${clickedLng}&zoom=15`;
+        navigator.clipboard.writeText(shareUrl).then(function() {
+          alert('URL copied to clipboard: ' + shareUrl);
+        }).catch(function(error) {
+          console.error('Error copying URL: ', error);
+        });
+      });
   
-      // Add event listeners for tooltips
       var iconContainers = document.getElementsByClassName('icon-container');
       for (var i = 0; i < iconContainers.length; i++) {
         iconContainers[i].addEventListener('mouseover', function() {
