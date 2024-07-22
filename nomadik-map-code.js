@@ -437,8 +437,8 @@ function initMap() {
   
     var contentString = `
     <div style="position:relative;">
-      <div style="position:absolute;top:0;left:0;">
-        <img src="https://img.icons8.com/ios-filled/50/000000/share.png" id="shareIcon" style="width:24px;height:24px;cursor:pointer;">
+      <div style="position:absolute;top:16;right:0;">
+        <img src="https://img.icons8.com/ios-filled/50/000000/share.png" id="shareIcon" style="width:16px;height:16px;cursor:pointer;">
       </div>
       <div>
         <strong>${name}</strong>
