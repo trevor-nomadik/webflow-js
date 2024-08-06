@@ -173,7 +173,20 @@ function initMap() {
 
       // If user input is provided, send data to the server
       if (userInput !== null && userInput !== "") {
-        sendDataToServer(userInput, clickedLat, clickedLng);
+        const descriptionJson = {
+          type: 'INFO',
+          details: userInput
+        };
+        const descriptionJsonString = JSON.stringify(descriptionJson);
+        const payload = {
+            type: "text_observation",
+            location: {
+                latitude_deg: lat,
+                longitude_deg: lng
+            },
+            description: descriptionJsonString
+        };
+        sendDataToServer(payload);
       }
     }
   });
@@ -263,7 +276,7 @@ function initMap() {
             polygonList.appendChild(listItem);
           });
         }
-    
+    z
         searchInput.addEventListener('input', function() {
           const searchTerm = searchInput.value.toLowerCase();
           const filteredFeatures = polygons.features.filter(feature => 
@@ -457,18 +470,36 @@ function initMap() {
       document.getElementById('yesBtn').addEventListener('click', function() {
         var descriptionString = JSON.stringify({
           polygonName: name,
+          'type': 'PRESENCE',
           response: true
         });
-        sendDataToServer(descriptionString, clickedLat, clickedLng);
+        var payload = { 
+          type: "polygon_observation",
+          location: {
+              latitude_deg: clickedLat,
+              longitude_deg: clickedLng
+          },
+          description: descriptionString
+        }
+        sendDataToServer(payload);
         infoWindow.close();
       });
   
       document.getElementById('noBtn').addEventListener('click', function() {
         var descriptionString = JSON.stringify({
           polygonName: name,
+          'type': 'PRESENCE',
           response: false
         });
-        sendDataToServer(descriptionString, clickedLat, clickedLng);
+        var payload = { 
+          type: "polygon_observation",
+          location: {
+              latitude_deg: clickedLat,
+              longitude_deg: clickedLng
+          },
+          description: descriptionString
+        }
+        sendDataToServer(payload);
         infoWindow.close();
       });
 
@@ -528,15 +559,9 @@ function initMap() {
     var userInput = prompt("What's going on here?", "");
 
     if (userInput !== null && userInput !== "") {
-      sendDataToServer(userInput, clickedLat, clickedLng);
-    }
-  });
-
-  function sendDataToServer(userInput, lat, lng) {
-    if (userInput !== null && userInput.trim() !== "") {
       const descriptionJson = {
-          type: 'INFO',
-          details: userInput
+        type: 'INFO',
+        details: userInput
       };
       const descriptionJsonString = JSON.stringify(descriptionJson);
       const payload = {
@@ -547,7 +572,12 @@ function initMap() {
           },
           description: descriptionJsonString
       };
+      sendDataToServer(payload);
+    }
+  });
 
+  function sendDataToServer(payload) {
+    if (userInput !== null && userInput.trim() !== "") {
       // Sending the data to your endpoint
       fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/submitPOI', {
         method: 'POST',
