@@ -577,8 +577,6 @@ function initMap() {
   });
 
   function sendDataToServer(payload) {
-    if (userInput !== null && userInput.trim() !== "") {
-      // Sending the data to your endpoint
       fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/submitPOI', {
         method: 'POST',
         headers: {
