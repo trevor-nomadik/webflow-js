@@ -137,7 +137,7 @@ function initMap() {
   // Create a button and set its properties
   var pointSelectionButton = document.createElement('button');
   pointSelectionButton.title = 'Select a point on the map and tell us what\'s going on';
-  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/assets/point_button.png'; 
+  pointSelectionButton.style.backgroundImage = 'url(https://trevor-nomadik.github.io/webflow-js/assets/point_button.png)'; 
   pointSelectionButton.style.backgroundSize = 'contain';
   pointSelectionButton.style.backgroundRepeat = 'no-repeat';
   pointSelectionButton.style.backgroundPosition = 'center';
@@ -181,8 +181,8 @@ function initMap() {
         const payload = {
             type: "text_observation",
             location: {
-                latitude_deg: lat,
-                longitude_deg: lng
+                latitude_deg: clickedLat,
+                longitude_deg: clickedLng
             },
             description: descriptionJsonString
         };
@@ -567,8 +567,8 @@ function initMap() {
       const payload = {
           type: "text_observation",
           location: {
-              latitude_deg: lat,
-              longitude_deg: lng
+              latitude_deg: clickedLat,
+              longitude_deg: clickedLng
           },
           description: descriptionJsonString
       };
@@ -577,6 +577,7 @@ function initMap() {
   });
 
   function sendDataToServer(payload) {
+    if (userInput !== null && userInput.trim() !== "") {
       // Sending the data to your endpoint
       fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/submitPOI', {
         method: 'POST',
