@@ -559,11 +559,19 @@ function initMap() {
   function sendDataToServer(userInput, lat, lng) {
     // Create a data object that includes userInput, lat, and lng
     if (userInput !== null && userInput.trim() !== "") {
-      // Prepare the data to be sent
-      var dataToSend = JSON.stringify({
-        location: { lat: lat, lng: lng },
-        description: userInput
-      });
+      const descriptionJson = {
+          type: 'INFO',
+          details: info
+      };
+      const descriptionJsonString = JSON.stringify(descriptionJson);
+      const payload = {
+          type: "text_observation",
+          location: {
+              latitude_deg: lat,
+              longitude_deg: lng
+          },
+          description: descriptionJsonString
+      };
 
       // Sending the data to your endpoint
       fetch('https://f99lmwcs34.execute-api.us-east-2.amazonaws.com/beta/submitPOI', {
@@ -572,7 +580,7 @@ function initMap() {
           'Origin': 'https://www.nomadik.ai',
           'Content-Type': 'application/json'
         },
-        body: dataToSend
+        body: JSON.stringify(payload)
       })
       .then(response => response.json())
       .then(data => {
