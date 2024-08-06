@@ -636,5 +636,4 @@ function initMap() {
       // Append modal to the body
       document.body.appendChild(modal);
     }
-  }
 }
