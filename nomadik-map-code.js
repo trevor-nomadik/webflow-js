@@ -264,7 +264,6 @@ function initMap() {
           });
         }
     
-        // Implement search functionality
         searchInput.addEventListener('input', function() {
           const searchTerm = searchInput.value.toLowerCase();
           const filteredFeatures = polygons.features.filter(feature => 
@@ -277,7 +276,7 @@ function initMap() {
       })
       .catch(error => {
         console.error('Error fetching report data:', error);
-        return []; // Return empty array if there's an error
+        return []; 
       });
   }
 
@@ -305,7 +304,7 @@ function initMap() {
       title: report.properties.description,
       icon: {
         url: 'https://trevor-nomadik.github.io/webflow-js/assets/fire_dept.png',
-        scaledSize: new google.maps.Size(25, 25), // Size of the icon
+        scaledSize: new google.maps.Size(25, 25),
       }
     });
 
@@ -324,17 +323,15 @@ function initMap() {
             bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
         });
     } else if (geometry.type === 'MultiPolygon') {
-        // For MultiPolygon, iterate through each polygon
         geometry.coordinates.forEach(polygon => {
             polygon[0].forEach(coord => {
                 bounds.extend(new google.maps.LatLng(coord[1], coord[0]));
             });
         });
     }
-    map.fitBounds(bounds); // Zooms the map to the bounds
+    map.fitBounds(bounds);
   }
   
-   // Set style based on feature properties
   map.data.setStyle(function(feature) {
     return {
       strokeColor: feature.getProperty('stroke'),
@@ -342,23 +339,18 @@ function initMap() {
     };
   });
 
-  // Create toggle controls
   var toggleCampsControlDiv = document.createElement('div');
   var toggleHeatmapControlDiv = document.createElement('div');
 
-  // Create toggle buttons
   var toggleCampsButton = document.createElement('button');
   var toggleHeatmapButton = document.createElement('button');
 
-  // Customize toggle buttons
   toggleCampsButton.textContent = 'Toggle Camps';
   toggleHeatmapButton.textContent = 'Toggle Debris';
 
-  // Add classes to toggle controls for styling
   toggleCampsControlDiv.className = 'custom-control';
   toggleHeatmapControlDiv.className = 'custom-control';
 
-  // Add event listeners to toggle buttons
   toggleCampsButton.addEventListener('click', function() {
     toggleCamps();
   });
@@ -367,31 +359,23 @@ function initMap() {
     toggleHeatmap();
   });
 
-  // Append toggle buttons to toggle controls
   toggleCampsControlDiv.appendChild(toggleCampsButton);
   toggleHeatmapControlDiv.appendChild(toggleHeatmapButton);
 
-  // Add toggle controls to the map
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleCampsControlDiv);
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleHeatmapControlDiv);
 
-  // Function to toggle Camps visibility
   function toggleCamps() {
-    // Toggle visibility of map data layer
     map.data.setMap(map.data.getMap() ? null : map);
   }
 
-  // Function to toggle heatmap visibility
   function toggleHeatmap() {
-    // Toggle visibility of heatmap layer
     heatmap.setMap(heatmap.getMap() ? null : map);
   }
   
-  // Create an info window to display the polygon's name
   var infoWindow = new google.maps.InfoWindow();
   var infoWindowOpened = false;
 
-  // Add a click event listener to the polygons
   map.data.addListener('click', function(event) {
     infoWindowOpened = true;
     var name = event.feature.getProperty('name');
@@ -526,11 +510,8 @@ function initMap() {
     });
   });
   
-  // Add a click event listener to the map
   google.maps.event.addListener(map, 'click', function() {
-      // Check if the info window was just opened
       if (infoWindowOpened) {
-          // If it was, set the flag to false and do nothing else
           infoWindowOpened = false;
           infoWindow.close();
       }
@@ -540,28 +521,22 @@ function initMap() {
       }
   });
 
-  // Add a right-click event listener to the map
   google.maps.event.addListener(map, 'rightclick', function(event) {
-    // Capture the clicked location's latitude and longitude
     var clickedLat = event.latLng.lat();
     var clickedLng = event.latLng.lng();
 
-    // Get user input through a prompt
     var userInput = prompt("What's going on here?", "");
 
-    // Check if the user provided input
     if (userInput !== null && userInput !== "") {
-      // Send data to the server, including clickedLat and clickedLng
       sendDataToServer(userInput, clickedLat, clickedLng);
     }
   });
 
   function sendDataToServer(userInput, lat, lng) {
-    // Create a data object that includes userInput, lat, and lng
     if (userInput !== null && userInput.trim() !== "") {
       const descriptionJson = {
           type: 'INFO',
-          details: info
+          details: userInput
       };
       const descriptionJsonString = JSON.stringify(descriptionJson);
       const payload = {
