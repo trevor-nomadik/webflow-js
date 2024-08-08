@@ -276,7 +276,7 @@ function initMap() {
             polygonList.appendChild(listItem);
           });
         }
-    z
+    
         searchInput.addEventListener('input', function() {
           const searchTerm = searchInput.value.toLowerCase();
           const filteredFeatures = polygons.features.filter(feature => 
