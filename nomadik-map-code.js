@@ -236,7 +236,7 @@ function initMap() {
         const encampmentCounts = {
           greenBeltCamps: 31, // 5/22
           parkCamps: 18,
-          campsNearSchools: 24
+          campsNearSchools: 19
         };
       
         // Update the text values
