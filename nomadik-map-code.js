@@ -13,8 +13,8 @@ function initMap() {
   var paramZoom = parseInt(getUrlParameter('zoom'), 10);
 
   // Set default map center and zoom if URL parameters are not provided
-  var defaultCenter = {lat: 30.266666, lng: -97.733330};
-  var defaultZoom = 12;
+  var defaultCenter = {lat: 31.563130439077945, lng: -97.17369405983729};
+  var defaultZoom = 5;
 
   var mapCenter = (paramLat && paramLng) ? {lat: paramLat, lng: paramLng} : defaultCenter;
   var mapZoom = paramZoom || defaultZoom;
