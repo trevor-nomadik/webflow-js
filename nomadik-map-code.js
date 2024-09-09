@@ -102,6 +102,20 @@ function initMap() {
     {lat: 30.267501851630694, lng: -97.73777855397638, title: 'Caritas Of Austin', info: 'Address: 611 Neches St, Austin, TX 78701'},
     {lat: 30.20603224134893, lng: -97.69028333172862, title: 'Austin VA', info: 'Address: 7600 Metropolis Dr Building 5, Austin, TX 78744'},
     {lat: 30.27863040901693, lng: -97.6869438054589, title: 'Hungry Hill Foundation', info: 'Address: 1189 Springdale Rd, Austin, TX 78721'},
+    {lat: 32.774284562329434, lng: -96.78347780833613, title: 'OurCalling', info: 'Address: 1702 S Cesar Chavez Blvd, Dallas, TX 75215'},
+    {lat: 32.77609360079064, lng: -96.7916827976674, title: 'The Bridge Homeless Recovery Center', info: 'Address: 1818 Corsicana St, Dallas, TX 75201'},
+    {lat: 32.77837315130932, lng: -96.77639948380472, title: 'Austin Street Center', info: 'Address: 1717 Jeffries St, Dallas, TX 75226'},
+    {lat: 32.77875652148801, lng: -96.77579330456533, title: 'Shelter Minitries', info: 'Address: 2929 Hickory St, Dallas, TX 75226'},
+    {lat: 32.77191778092708, lng: -96.79806134027845, title: 'Dallas Life', info: 'Address: 1100 Cadiz St, Dallas, TX 75215'},
+    {lat: 32.77063567359763, lng: -96.7659641725375, title: 'Dallas Homeless Services Department', info: 'Address: 2922 Martin Luther King Jr Blvd, Dallas, TX 75215'},
+    {lat: 32.77868800756224, lng: -96.79368221768196, title: 'The Stewpot', info: 'Address: 1835 Young St, Dallas, TX 75201'},
+    {lat: 32.79218507125334, lng: -96.76507172523488, title: 'Shared Housing Center', info: 'Address: 4611 Eastside Ave, Dallas, TX 75226'},
+    {lat: 32.789385558655404, lng: -96.78805729984441, title: 'Housing Crisis Center', info: 'Address: 2800 Live Oak St, Dallas, TX 75204'},
+    {lat: 32.80706641343638, lng: -96.82818108932344, title: 'Genesis Women\'s Shelter Outreach Office', info: 'Address: 2023 Lucas Dr, Dallas, TX 75219'},
+    {lat: 32.812817884822564, lng: -96.82914523482917, title: 'Union Gospel Mission - Center of Hope', info: 'Address: 4815 Cass St, Dallas, TX 75235'},
+    {lat: 32.81351829635036, lng: -96.83738458875744, title: 'Salvation Army', info: 'Address: 5302 Harry Hines Blvd, Dallas, TX 75235'},
+    {lat: 32.81018263143326, lng: -96.86007046383432, title: 'Housing Forward', info: 'Address: 3000 Pegasus Park Dr, Dallas, TX 75247'},
+    {lat: 32.82290266615259, lng: -96.8631133177535, title: 'Simmons Family Gateway Resource Center', info: 'Address: 1421 W Mockingbird Ln Suite C, Dallas, TX 75247'}
   ]
 
   const eventIDs = [{lat: 30.25962444640977, lng: -97.70933145235303, title: 'We Can Now Outreach', info: '12 pm: water, food, hygeine, clothes', day: 7, hour: 12}]
